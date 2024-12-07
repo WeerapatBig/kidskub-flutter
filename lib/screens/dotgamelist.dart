@@ -8,7 +8,7 @@ import 'package:firstly/screens/motionlevel1.dart';
 import 'package:firstly/screens/quizgamedot.dart';
 //import 'package:firstly/screens/quizlevel1.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
-import 'package:firstly/screens/testdotgameeaszy.dart';
+import 'package:firstly/screens/dotgameeasy.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
 
