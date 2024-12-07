@@ -7,7 +7,6 @@ import 'package:firstly/function/result_widget%20_quiz.dart';
 import 'package:firstly/function/showsticker.dart';
 import 'package:firstly/screens/colorgame_easy.dart';
 import 'package:firstly/screens/colorgamehard.dart';
-import 'package:firstly/screens/dotgame.dart';
 import 'package:firstly/screens/dotgamehard.dart';
 import 'package:firstly/screens/dotgamelist.dart';
 import 'package:firstly/screens/gameline2.dart';
@@ -17,9 +16,8 @@ import 'package:firstly/screens/homepage.dart';
 import 'package:firstly/screens/linegamelist.dart';
 import 'package:firstly/screens/motionlevel1.dart';
 import 'package:firstly/screens/quizgamedot.dart';
-import 'package:firstly/screens/quizlevel1.dart';
 import 'package:firstly/screens/strickerbook.dart';
-import 'package:firstly/screens/testdotgameeaszy.dart';
+import 'package:firstly/screens/dotgameeasy.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,7 +70,6 @@ class DesignQuestApp extends StatelessWidget {
               earnedStars: 0,
             ),
         '/colorgamehard': (context) => const ColorGameHard(),
-        '/quizlevel1': (context) => QuizLevel1(),
         '/quizgamedot': (context) => const DotQuizGame(
               starColor: 'yellow',
               earnedStars: 0,
@@ -81,11 +78,7 @@ class DesignQuestApp extends StatelessWidget {
         '/gamelinehard': (context) => const LineGameHard(),
         '/dotgamelist': (context) => const DotGameList(),
         '/linegamelist': (context) => const LineGameList(),
-        '/testdotgameeazy': (context) => const DotGameEasy(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
-        '/dotgame': (context) => const DotGameEazy(
+        '/dotgameeasy': (context) => const DotGameEasy(
               starColor: 'yellow',
               earnedStars: 0,
             ),

@@ -524,8 +524,8 @@ class _DotGameListState extends State<DotGameList>
       builder: (context) {
         // สร้างอนิเมชันการเลื่อน
         final slideAnimation = Tween<Offset>(
-          begin: Offset(0.0, -1.0), // เริ่มจากนอกหน้าจอด้านบน
-          end: Offset(0.0, 0.0), // เลื่อนเข้ามาในหน้าจอ
+          begin: const Offset(0.0, -1.0), // เริ่มจากนอกหน้าจอด้านบน
+          end: const Offset(0.0, 0.0), // เลื่อนเข้ามาในหน้าจอ
         ).animate(CurvedAnimation(
           parent: animationController,
           curve: Curves.easeOut,
@@ -624,7 +624,7 @@ class _DotGameListState extends State<DotGameList>
                       size: starSize - 80,
                       color: const Color.fromARGB(255, 255, 187, 14)
                           .withOpacity(0.5),
-                      position: Offset(-40, 0),
+                      position: const Offset(-40, 0),
                     ), // ใส่เอฟเฟกต์เรืองแสง
                   Image.asset(
                     'assets/images/dotchapter/yellow_stars_${getYellowStarImageName(yellowStars)}.png',
@@ -666,7 +666,7 @@ class _DotGameListState extends State<DotGameList>
                     PulseEffect(
                       size: starSize - 80,
                       color: Colors.purple.withOpacity(0.3),
-                      position: Offset(-40, 0),
+                      position: const Offset(-40, 0),
                     ), // ใส่เอฟเฟกต์เรืองแสง
                   Image.asset(
                     'assets/images/dotchapter/purple_stars_${getPurpleStarImageName(purpleStars)}.png',
@@ -923,7 +923,7 @@ class _PulseEffectState extends State<PulseEffect>
           child: Transform.scale(
             scale: _animation.value,
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 50, 0),
+              margin: const EdgeInsets.fromLTRB(0, 0, 50, 0),
               width: widget.size,
               height: widget.size,
               decoration: BoxDecoration(
@@ -934,7 +934,7 @@ class _PulseEffectState extends State<PulseEffect>
                       color: widget.color.withOpacity(0.5),
                       blurRadius: 20,
                       spreadRadius: 5,
-                      offset: Offset(0, 0),
+                      offset: const Offset(0, 0),
                     )
                   ]),
             ),

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firstly/function/result_widget%20_quiz.dart';
 import 'package:firstly/screens/dotgamelist.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DotQuizGame extends StatefulWidget {
   final String starColor;
@@ -17,7 +18,8 @@ class DotQuizGame extends StatefulWidget {
   _DotQuizGameState createState() => _DotQuizGameState();
 }
 
-class _DotQuizGameState extends State<DotQuizGame> {
+class _DotQuizGameState extends State<DotQuizGame>
+    with TickerProviderStateMixin {
   int currentLevel = 1;
   int hearts = 3;
   int? selectedAnswer;
@@ -27,6 +29,10 @@ class _DotQuizGameState extends State<DotQuizGame> {
   bool showResult = false;
   bool isWin = false;
   bool showTutorial = true;
+  bool showGreenFlash = false;
+  bool showRedFlash = false;
+
+  bool isWarningVisible = false;
 
   final List<Map<String, dynamic>> levels = [
     {
@@ -67,6 +73,81 @@ class _DotQuizGameState extends State<DotQuizGame> {
     },
   ];
 
+  void showWarning(BuildContext context) {
+    // ถ้ากำลังแสดง popup อยู่ ไม่ต้องแสดงซ้ำ
+    if (isWarningVisible) return;
+
+    // ตั้งค่าสถานะให้กำลังแสดง popup
+    setState(() {
+      isWarningVisible = true; // ตั้งค่าว่าแอนิเมชันกำลังทำงาน
+    });
+
+    // สร้าง AnimationController สำหรับอนิเมชันการเลื่อนเข้าและออก
+    final animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    // สร้าง OverlayEntry สำหรับ Pop-up
+    late OverlayEntry overlayEntry;
+
+    // ฟังก์ชันสำหรับลบ OverlayEntry
+    void removeOverlay() {
+      animationController.reverse().then((value) {
+        overlayEntry.remove();
+        animationController.dispose();
+        setState(() {
+          isWarningVisible = false; // รีเซ็ตสถานะเมื่อแอนิเมชันเสร็จสิ้น
+        });
+      });
+    }
+
+    // สร้าง OverlayEntry
+    overlayEntry = OverlayEntry(
+      builder: (context) {
+        // สร้างอนิเมชันการเลื่อน
+        final slideAnimation = Tween<Offset>(
+          begin: const Offset(0.0, -1.0), // เริ่มจากนอกหน้าจอด้านบน
+          end: const Offset(0.0, 0.0), // เลื่อนเข้ามาในหน้าจอ
+        ).animate(CurvedAnimation(
+          parent: animationController,
+          curve: Curves.easeOut,
+        ));
+
+        return Positioned(
+          top: MediaQuery.of(context).size.height * 0, // ตำแหน่งบนหน้าจอ
+          right:
+              MediaQuery.of(context).size.width * 0.35, // ตำแหน่งขวาของหน้าจอ
+          child: SlideTransition(
+            position: slideAnimation,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Image.asset(
+                  'assets/images/dotchapter/unlock_notification.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    // แสดง OverlayEntry
+    Overlay.of(context).insert(overlayEntry);
+
+    // เริ่มอนิเมชันเลื่อนเข้า
+    animationController.forward();
+
+    // ตั้งเวลาให้ Pop-up แสดงผล 2 วินาที แล้วเลื่อนออก
+    Future.delayed(const Duration(seconds: 2), () {
+      removeOverlay();
+    });
+  }
+
   // ฟังก์ชันเช็คคำตอบของด่าน 1-5
   void checkAnswer() {
     final correctAnswers =
@@ -75,35 +156,68 @@ class _DotQuizGameState extends State<DotQuizGame> {
       if (selectedAnswer != null && correctAnswers.contains(selectedAnswer)) {
         moveToNextLevel();
       } else {
-        decreaseHearts();
+        _onWrongAnswer();
       }
     } else if (currentLevel == 6) {
       if (selectedAnswers[0] == correctAnswers[0] &&
           selectedAnswers[1] == correctAnswers[1]) {
         moveToNextLevel();
       } else {
-        decreaseHearts();
+        _onWrongAnswer();
       }
     }
   }
 
   void moveToNextLevel() {
-    if (currentLevel < levels.length) {
+    setState(() {
+      // แสดงเอฟเฟกต์สั่น
+      HapticFeedback.mediumImpact();
+      // แสดงแสงสีเขียว
+      showGreenFlash = true;
+    });
+
+    // ตั้งเวลาให้แสงสีเขียวหายไปหลังจาก 300ms
+    Future.delayed(const Duration(milliseconds: 400), () {
       setState(() {
-        currentLevel++;
-        selectedAnswer = null;
-        if (currentLevel == 6) {
-          selectedAnswers = [null, null];
-        }
+        showGreenFlash = false;
       });
-      _pageController.animateToPage(
-        currentLevel - 1,
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      _endGame(true);
-    }
+    });
+
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (currentLevel < levels.length) {
+        setState(() {
+          currentLevel++;
+          selectedAnswer = null;
+          if (currentLevel == 6) {
+            selectedAnswers = [null, null];
+          }
+        });
+        _pageController.animateToPage(
+          currentLevel - 1,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        _endGame(true);
+      }
+    });
+  }
+
+  void _onWrongAnswer() {
+    setState(() {
+      // สั่นเบาๆ
+      HapticFeedback.mediumImpact();
+      // แสดงไฟสีแดง
+      showRedFlash = true;
+    });
+
+    // ตั้งเวลาให้แสงสีแดงหายไปหลังจาก 300ms
+    Future.delayed(const Duration(milliseconds: 400), () {
+      setState(() {
+        showRedFlash = false;
+      });
+      decreaseHearts();
+    });
   }
 
   void _onPressResetButton() {
@@ -648,7 +762,17 @@ class _DotQuizGameState extends State<DotQuizGame> {
                                   setState(() {
                                     _buttonScale = 1.0;
                                   });
-                                  checkAnswer();
+                                  if (currentLevel < 6 &&
+                                      selectedAnswer != null) {
+                                    checkAnswer();
+                                  } else if (currentLevel == 6 &&
+                                      selectedAnswers[0] != null &&
+                                      selectedAnswers[1] != null) {
+                                    checkAnswer();
+                                  } else {
+                                    // หากยังไม่มีคำตอบ ไม่ทำอะไร หรืออาจจะโชว์ข้อความแจ้งเตือน
+                                    showWarning(context);
+                                  }
                                 },
                                 onTapCancel: () {
                                   setState(() {
@@ -677,6 +801,37 @@ class _DotQuizGameState extends State<DotQuizGame> {
               );
             },
           ),
+          // เลเยอร์แสงสีเขียว (จะถูกแสดงก็ต่อเมื่อ showGreenFlash = true)
+          if (showGreenFlash)
+            Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.center, // จุดศูนย์กลางของ gradient
+                  radius: 0.99, // รัศมีของ gradient
+                  colors: [
+                    Colors.transparent, // สีที่ตรงกลางเป็นโปร่งใส
+                    const Color.fromARGB(255, 7, 255, 57)
+                        .withOpacity(0.5), // สีที่ขอบ
+                  ],
+                  stops: [0.0, 1.0], // จุดที่เปลี่ยนสี
+                ),
+              ),
+            ),
+          if (showRedFlash)
+            Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.center, // จุดศูนย์กลางของ gradient
+                  radius: 0.99, // รัศมีของ gradient
+                  colors: [
+                    Colors.transparent, // สีที่ตรงกลางเป็นโปร่งใส
+                    const Color.fromARGB(255, 255, 40, 40)
+                        .withOpacity(0.5), // สีที่ขอบ
+                  ],
+                  stops: [0.0, 1.0], // จุดที่เปลี่ยนสี
+                ),
+              ),
+            ),
           _buildBackButton(context),
           Positioned(
             top: screenWidth * 0.01,
