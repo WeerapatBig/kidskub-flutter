@@ -341,7 +341,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       position: _imageSlideAnimation,
                       child: Container(
                         width: screenSize.width * 0.6,
-                        height: screenSize.height * 0.25,
+                        height: screenSize.height * 0.28,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
@@ -384,8 +384,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               duration: _duration,
                               child: Image.asset(
                                 'assets/images/homepage/strickerbook_button.png',
-                                width: screenSize.width * 0.13,
+                                width: screenSize.width * 0.15,
                                 height: screenSize.height * 0.25,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
@@ -419,6 +420,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 'assets/images/homepage/buttonplay.png',
                                 width: screenSize.width * 0.15,
                                 height: screenSize.height * 0.25,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),

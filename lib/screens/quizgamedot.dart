@@ -1,6 +1,5 @@
 import 'dart:ui';
-
-import 'package:firstly/function/result_widget%20_quiz.dart';
+import 'package:firstly/function/result_widget_quiz.dart';
 import 'package:firstly/screens/dotgamelist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,7 +1,7 @@
 import 'package:firstly/function/background_audio_manager.dart';
 import 'package:firstly/function/gamesettingsdialog.dart';
-import 'package:firstly/function/progressbar.dart';
-import 'package:firstly/function/result_widget%20_quiz.dart';
+import 'package:firstly/function/progressbar_lineeasy.dart';
+import 'package:firstly/function/result_widget_quiz.dart';
 //import 'package:firstly/function/progressbar_dothard.dart';
 //import 'package:firstly/function/result_widget.dart';
 import 'package:firstly/function/showsticker.dart';
@@ -19,6 +19,7 @@ import 'package:firstly/screens/quizgamedot.dart';
 import 'package:firstly/screens/strickerbook.dart';
 import 'package:firstly/screens/dotgameeasy.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
+import 'package:firstly/screens_chapter2/line_game_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,9 +50,10 @@ class DesignQuestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<int> remainingTime = ValueNotifier<int>(120);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/line_game_test',
       theme: ThemeData(
         textTheme: GoogleFonts.kodchasanTextTheme(),
       ),
@@ -64,6 +66,10 @@ class DesignQuestApp extends StatelessWidget {
             ),
         '/gameselectionpage': (context) => const GameSelectionPage(),
 
+        '/line_game_test': (contex) => DrawLineGameScreen(
+              starColor: 'yellow',
+              earnedStars: 0,
+            ),
         '/gameline-2': (context) => const GameLine2(), // Example of "เกมเส้น"
         '/dotgamehard': (context) => const DotGameHard(
               starColor: 'yellow',
@@ -94,9 +100,10 @@ class DesignQuestApp extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/nextLevel');
               },
             ),
-        '/progressbar': (context) => const ProgressBarWidget(
-              getStars: 1,
-              starPositions: [200.0, 450.0, 700.0],
+        '/progressbar_lineeasy': (context) => ProgressBarLineEasyWidget(
+              remainingTime: remainingTime,
+              maxTime: 120,
+              starCount: 3,
             ),
         // '/progressbar_dothard': (context) =>
         //     const ProgressBarDotHardWidget(remainingTime: 60, getStars: 1),

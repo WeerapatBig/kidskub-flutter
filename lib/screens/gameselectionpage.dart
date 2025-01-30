@@ -263,7 +263,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
       AnimationController unlockController) {
     final shackleSlideAnimation =
         Tween<double>(begin: 0.0, end: -120.0).animate(
-      CurvedAnimation(parent: unlockController, curve: Curves.easeOut),
+      CurvedAnimation(parent: unlockController, curve: Curves.bounceIn),
     );
     final shackleFadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(parent: unlockController, curve: Curves.easeOut),
@@ -271,11 +271,11 @@ class _GameSelectionPageState extends State<GameSelectionPage>
 
     // อนิเมชันการสั่นของกุญแจเมื่อผู้เล่นไม่มีกุญแจ
     final shakeAnimation = TweenSequence([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: -10.0), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: -10.0, end: 10.0), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: 10.0, end: -10.0), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: -10.0, end: 10.0), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: 10.0, end: 0.0), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -20.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: -20.0, end: 20.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 20.0, end: -20.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: -20.0, end: 20.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 20.0, end: 0.0), weight: 2),
     ]).animate(shakeController);
 
     return AnimatedBuilder(
@@ -284,33 +284,36 @@ class _GameSelectionPageState extends State<GameSelectionPage>
         return Transform.translate(
           offset: Offset(shakeAnimation.value, 0),
           child: Container(
-            width: screenSize.width * 0.15,
-            height: screenSize.height * 0.3,
+            width: screenSize.width * 0.2,
+            height: screenSize.height * 0.45,
             child: Stack(
               alignment: Alignment.center,
               children: [
                 // งวงกุญแจ (Shackle) ของด่านนี้ พร้อมอนิเมชัน
                 Positioned(
-                  top: screenSize.height * 0.03,
+                  top: screenSize.height * 0.018,
                   child: Opacity(
                     opacity: shackleFadeAnimation.value,
                     child: Transform.translate(
                       offset: Offset(0, shackleSlideAnimation.value - 20),
                       child: Image.asset(
                         lockShackleImages[index],
-                        width: screenSize.width * 0.15,
-                        height: screenSize.height * 0.178,
+                        width: screenSize.width * 0.2,
+                        height: screenSize.height * 0.28,
                         fit: BoxFit.contain,
                       ),
                     ),
                   ),
                 ),
                 // ตัวเรือนกุญแจ (Body) ของด่านนี้
-                Image.asset(
-                  lockBodyImages[index],
-                  width: screenSize.width * 0.15,
-                  height: screenSize.height * 0.15,
-                  fit: BoxFit.contain,
+                Positioned(
+                  top: screenSize.height * 0.13,
+                  child: Image.asset(
+                    lockBodyImages[index],
+                    width: screenSize.width * 0.16,
+                    height: screenSize.height * 0.2,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ],
             ),
