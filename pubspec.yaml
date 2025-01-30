@@ -33,7 +33,7 @@ dependencies:
   confetti: ^0.7.0
   rive: ^0.13.14
   flutter_svg: ^2.0.10+1
-
+  path_drawing: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -44,6 +44,11 @@ dependencies:
   video_player: ^2.9.2
   google_fonts: ^6.2.1
   just_audio: ^0.9.42
+  flame: ^1.22.0
+  characters: ^1.3.0
+  flame_forge2d: ^0.18.2+3
+  flame_kenney_xml: ^0.1.1+3
+  xml: ^6.5.0
 
 dev_dependencies:
   flutter_test:
@@ -165,6 +170,28 @@ flutter:
   - assets/images/selectionpage/line_lock2.png
   - assets/images/selectionpage/shape_lock1.png
   - assets/images/selectionpage/shape_lock2.png
+
+  - assets/images/linegamelist/card_comic.png
+  - assets/images/linegamelist/card_lock.png
+  - assets/images/linegamelist/charactor_line.png
+  - assets/images/linegamelist/gridblue.png
+  - assets/images/linegamelist/level1_hide.png
+  - assets/images/linegamelist/level1.png
+  - assets/images/linegamelist/level2_hide.png
+  - assets/images/linegamelist/level2.png
+  - assets/images/linegamelist/level3_hide.png
+  - assets/images/linegamelist/level3.png
+  - assets/images/linegamelist/level4_hide.png
+  - assets/images/linegamelist/level4.png
+  - assets/images/linegamelist/hint_button_active.png
+  - assets/images/linegamelist/hint_button_inactive.png
+  - assets/images/linegamelist/exit_button.png
+  - assets/images/linegamelist/resume_button.png
+  - assets/images/linegamelist/time_bar.png
+  - assets/images/linegamelist/clock.png
+  - assets/images/linegamelist/star_empty.png
+  - assets/images/linegamelist/star_full.png
+  - assets/images/linegamelist/starcongrats.png
 
   - assets/images/dotchapter/chractor1.png
   - assets/images/dotchapter/bg.png
