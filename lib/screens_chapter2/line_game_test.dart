@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'dart:async' as async;
-import 'package:firstly/function/progressbar_lineeasy.dart';
-import 'package:firstly/function/result_widget.dart';
+import 'package:firstly/widgets/progressbar_lineeasy.dart';
+import 'package:firstly/widgets/result_widget.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
@@ -29,6 +29,7 @@ class _DrawLineGameScreenState extends State<DrawLineGameScreen>
   bool showResult = false;
   bool isGameWin = false;
   bool showTutorial = false;
+  bool hasShownTutorialForLevel2 = false; // เช็คว่าด่าน 2 Tutorial
   bool isHintButtonCooldown = false;
   int cooldownTimeLeft = 5; // ตัวแปรเก็บเวลาคูลดาวน์เริ่มต้น
 
@@ -98,291 +99,310 @@ class _DrawLineGameScreenState extends State<DrawLineGameScreen>
     double imageHeight = screenSize.height;
     double fontSize = screenSize.width * 0.015;
 
-    return Scaffold(
-      body: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // ----- GameWidget -----
-          Positioned.fill(
-            child: GestureDetector(
-              onPanStart: (details) {
-                // เริ่มวาดเส้นใหม่
-                widget.game.startNewLine(details.localPosition);
-              },
-              onPanUpdate: (details) {
-                if (!widget.game.isLineComplete) {
-                  // อัปเดตปลายเส้นตามการลากนิ้ว
-                  widget.game.updateStraightLine(details.localPosition);
-                }
-              },
-              onPanEnd: (details) {
-                // สิ้นสุดการวาดเส้น
-                if (!widget.game.isLineComplete) {
-                  widget.game.finishLine();
-                  setState(() {
-                    // รีเซ็ต Slider กลับเป็น 0
-                    sliderValue = 0;
-                  });
-                }
-              },
-              child: GameWidget(
-                game: widget.game,
-              ),
-            ),
-          ),
+    return ValueListenableBuilder<int>(
+        valueListenable: widget.game.currentLevelIndex,
+        builder: (context, currentLevel, cjild) {
+          int tutorialIndex = (currentLevel == 0 || currentLevel == 1) ? 0 : 1;
 
-          if (widget.game.isLineComplete)
-            Positioned(
-              right: screenSize.width * 0.13,
-              top: screenSize.height * 0.16,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // --- Slider ---
-                  Container(
-                    width: imageWidth * 0.05,
-                    height: imageHeight * 0.5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      border: Border.all(color: Colors.black, width: 8),
-                      borderRadius: BorderRadius.circular(imageWidth * 0.1),
-                    ),
-                    child: SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        thumbShape: CustomThumbShape(
-                          thumbRadius: imageWidth * 0.028,
-                          borderColor: Colors.black, // สีของเส้นรอบนอก
-                          borderWidth: 6.0, // ความหนาของเส้นรอบนอก
-                        ),
-                        thumbColor: const Color.fromARGB(255, 1, 208, 255),
-                        //trackShape: const RectangularSliderTrackShape(),
-                        //trackHeight: 80,
-                        overlayShape:
-                            const RoundSliderOverlayShape(overlayRadius: 35),
-                        //inactiveTrackColor: Colors.grey.shade300,
-                        activeTrackColor: Colors.grey.shade300,
-                      ),
-                      child: RotatedBox(
-                        quarterTurns: 3, // หมุนให้เป็นแนวตั้ง
-                        child: Slider(
-                          activeColor: Colors.grey.shade300,
-                          inactiveColor: Colors.grey.shade300,
-                          thumbColor: Color.fromARGB(255, 1, 208, 255),
-                          value: sliderValue,
-                          min: -5,
-                          max: 5,
-                          divisions: 10,
-                          onChanged: (value) {
-                            setState(() {
-                              sliderValue = value;
-                              widget.game.updateCurve(sliderValue);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
+          // เช็คว่าถึง Level 2 หรือยัง ถ้าใช่ให้เปิด Tutorial อีกรอบ
+          if (currentLevel == 2 && !hasShownTutorialForLevel2) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                setState(() {
+                  showTutorial = true;
+                  hasShownTutorialForLevel2 = true;
+                });
+              }
+            });
+          }
 
-                  // --- ปุ่มยืนยัน (วงกลม+เครื่องหมายถูก) ---
-                  SizedBox(
-                    width: imageWidth * 0.09,
-                    height: imageHeight * 0.11,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.green,
-                        shape:
-                            const CircleBorder(), // สีไอคอน/ตัวหนังสือเมื่อกด
-                        side: const BorderSide(
-                          color: Colors.black,
-                          width: 6, // ถ้าต้องการเงา/ขอบเพิ่มเติม ปรับได้
-                        ),
-                        // ถ้าต้องการเงา/ขอบเพิ่มเติม ปรับได้
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          // โค้ดกดปุ่ม => ตรวจเส้น
-                          widget.game.attemptConfirmLine(sliderValue.round());
-                        });
-                      },
-                      child: Icon(
-                        Icons.check_rounded,
-                        color: Colors.white,
-                        size: screenSize.width * 0.05, // ไอคอนใหญ่หน่อย
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          // ----- ปุ่ม Hint (ตัวอย่าง) -----
-          Positioned(
-            top: screenSize.height * 0.55, // เว้นระยะจากขอบบน
-            right: screenSize.width * 0.27, // เว้นระยะจากขอบขวา
-            child: GestureDetector(
-              onTap: isHintButtonCooldown
-                  ? null
-                  : () {
-                      setState(() {
-                        // สั่งให้ game.isHintActive = true
-                        widget.game.showHint();
-                        isHintButtonCooldown = true;
-                      });
-                      // ตั้งเวลาคูลดาวน์
-                      async.Timer.periodic(const Duration(seconds: 1), (timer) {
-                        setState(() {
-                          cooldownTimeLeft -= 1; // ลดเวลาถอยหลัง
-                          if (cooldownTimeLeft <= 0) {
-                            timer.cancel(); // หยุดตัวจับเวลา
-                            isHintButtonCooldown = false; // ปลดล็อคปุ่ม
-                            cooldownTimeLeft = 5; // รีเซ็ตเวลาคูลดาวน์
-                          }
-                        });
-                      }); // หลังจาก 5 วินาที -> ปลดล็อคปุ่ม
+          return Scaffold(
+            body: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // ----- GameWidget -----
+                Positioned.fill(
+                  child: GestureDetector(
+                    onPanStart: (details) {
+                      // เริ่มวาดเส้นใหม่
+                      widget.game.startNewLine(details.localPosition);
                     },
-              child: Column(
-                children: [
-                  if (isHintButtonCooldown)
-                    Text(
-                      '$cooldownTimeLeft', // ตัวเลขเวลาถอยหลัง
-                      style: TextStyle(
-                        color: Colors.white, // สีตัวอักษร
-                        fontSize: fontSize, // ขนาดตัวอักษร
-                        fontWeight: FontWeight.bold, // ทำตัวอักษรหนา
-                      ),
+                    onPanUpdate: (details) {
+                      if (!widget.game.isLineComplete) {
+                        // อัปเดตปลายเส้นตามการลากนิ้ว
+                        widget.game.updateStraightLine(details.localPosition);
+                      }
+                    },
+                    onPanEnd: (details) {
+                      // สิ้นสุดการวาดเส้น
+                      if (!widget.game.isLineComplete) {
+                        widget.game.finishLine();
+                        setState(() {
+                          // รีเซ็ต Slider กลับเป็น 0
+                          sliderValue = 0;
+                        });
+                      }
+                    },
+                    child: GameWidget(
+                      game: widget.game,
                     ),
-                  SizedBox(height: 0),
-                  // --- ตรงนี้ปรับเป็น Animated/Pulse ---
-                  if (isHintButtonCooldown)
-                    // ถ้าอยู่คูลดาวน์ => ใช้รูป inactive ปกติ (ไม่มี animation)
-                    Image.asset(
-                      'assets/images/linegamelist/hint_button_inactive.png',
-                      width: imageWidth * 0.08,
-                      height: imageHeight * 0.08,
-                    )
-                  else
-                    // ถ้าไม่คูลดาวน์ => ใส่ ScaleTransition + animation
-                    ScaleTransition(
-                      scale: _hintScaleAnim, // ใช้อนิเมชันขยาย/หด
-                      child: Image.asset(
-                        'assets/images/linegamelist/hint_button_active.png',
-                        width: imageWidth * 0.08,
-                        height: imageHeight * 0.08,
-                      ),
+                  ),
+                ),
+
+                if (widget.game.isLineComplete)
+                  Positioned(
+                    right: screenSize.width * 0.13,
+                    top: screenSize.height * 0.16,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // --- Slider ---
+                        Container(
+                          width: imageWidth * 0.05,
+                          height: imageHeight * 0.5,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            border: Border.all(color: Colors.black, width: 8),
+                            borderRadius:
+                                BorderRadius.circular(imageWidth * 0.1),
+                          ),
+                          child: SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              thumbShape: CustomThumbShape(
+                                thumbRadius: imageWidth * 0.028,
+                                borderColor: Colors.black, // สีของเส้นรอบนอก
+                                borderWidth: 6.0, // ความหนาของเส้นรอบนอก
+                              ),
+                              thumbColor:
+                                  const Color.fromARGB(255, 1, 208, 255),
+                              //trackShape: const RectangularSliderTrackShape(),
+                              //trackHeight: 80,
+                              overlayShape: const RoundSliderOverlayShape(
+                                  overlayRadius: 35),
+                              //inactiveTrackColor: Colors.grey.shade300,
+                              activeTrackColor: Colors.grey.shade300,
+                            ),
+                            child: RotatedBox(
+                              quarterTurns: 3, // หมุนให้เป็นแนวตั้ง
+                              child: Slider(
+                                activeColor: Colors.grey.shade300,
+                                inactiveColor: Colors.grey.shade300,
+                                thumbColor: Color.fromARGB(255, 1, 208, 255),
+                                value: sliderValue,
+                                min: -5,
+                                max: 5,
+                                divisions: 10,
+                                onChanged: (value) {
+                                  setState(() {
+                                    sliderValue = value;
+                                    widget.game.updateCurve(sliderValue);
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+
+                        // --- ปุ่มยืนยัน (วงกลม+เครื่องหมายถูก) ---
+                        SizedBox(
+                          width: imageWidth * 0.09,
+                          height: imageHeight * 0.11,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.green,
+                              shape:
+                                  const CircleBorder(), // สีไอคอน/ตัวหนังสือเมื่อกด
+                              side: const BorderSide(
+                                color: Colors.black,
+                                width: 6, // ถ้าต้องการเงา/ขอบเพิ่มเติม ปรับได้
+                              ),
+                              // ถ้าต้องการเงา/ขอบเพิ่มเติม ปรับได้
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                // โค้ดกดปุ่ม => ตรวจเส้น
+                                widget.game
+                                    .attemptConfirmLine(sliderValue.round());
+                              });
+                            },
+                            child: Icon(
+                              Icons.check_rounded,
+                              color: Colors.white,
+                              size: screenSize.width * 0.05, // ไอคอนใหญ่หน่อย
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                ],
-              ),
-            ),
-          ),
-          // ----- ปุ่ม FloatingButton Icon ย้อนกลับ -----
-          Positioned(
-            top: screenSize.height * 0.05, // ระยะจากขอบบน
-            right: screenSize.width * 0.04, // ระยะจากขอบซ้าย
-            child: FloatingActionButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true, // ปิดเมื่อกดด้านนอก
-                  builder: (BuildContext context) => _buildExitPopUp(context),
-                );
-                gameController.pauseCountdown();
-              },
-              backgroundColor: Colors.white.withOpacity(0), // สีพื้นหลังปุ่ม
-              elevation: 0, // ไม่มีเงา
-              hoverElevation: 0, // ไม่มีเงาเมื่อโฮเวอร์
-              focusElevation: 0, // ไม่มีเงาเมื่อโฟกัส
-              highlightElevation: 0, // ไม่มีเงาเมื่อกด
-              child: Icon(Icons.close_rounded,
-                  size: screenSize.width * 0.038, color: Colors.black), // ไอคอน
-            ),
-          ),
-
-          ProgressBarLineEasyWidget(
-              remainingTime: gameController.currentTime,
-              maxTime: 120,
-              starCount: gameController.starEarned),
-
-          // ปุ่ม Info สำหรับเปิด TutorialWidget
-          Positioned(
-            bottom: screenSize.height * 0.03,
-            right: screenSize.width * 0.03,
-            child: SizedBox(
-              width: screenSize.width * 0.08,
-              height: screenSize.height * 0.11,
-              child: FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      showTutorial = true; // เปิด TutorialWidget
+                  ),
+                // ----- ปุ่ม Hint (ตัวอย่าง) -----
+                Positioned(
+                  top: screenSize.height * 0.55, // เว้นระยะจากขอบบน
+                  right: screenSize.width * 0.27, // เว้นระยะจากขอบขวา
+                  child: GestureDetector(
+                    onTap: isHintButtonCooldown
+                        ? null
+                        : () {
+                            setState(() {
+                              // สั่งให้ game.isHintActive = true
+                              widget.game.showHint();
+                              isHintButtonCooldown = true;
+                            });
+                            // ตั้งเวลาคูลดาวน์
+                            async.Timer.periodic(const Duration(seconds: 1),
+                                (timer) {
+                              setState(() {
+                                cooldownTimeLeft -= 1; // ลดเวลาถอยหลัง
+                                if (cooldownTimeLeft <= 0) {
+                                  timer.cancel(); // หยุดตัวจับเวลา
+                                  isHintButtonCooldown = false; // ปลดล็อคปุ่ม
+                                  cooldownTimeLeft = 5; // รีเซ็ตเวลาคูลดาวน์
+                                }
+                              });
+                            }); // หลังจาก 5 วินาที -> ปลดล็อคปุ่ม
+                          },
+                    child: Column(
+                      children: [
+                        if (isHintButtonCooldown)
+                          Text(
+                            '$cooldownTimeLeft', // ตัวเลขเวลาถอยหลัง
+                            style: TextStyle(
+                              color: Colors.white, // สีตัวอักษร
+                              fontSize: fontSize, // ขนาดตัวอักษร
+                              fontWeight: FontWeight.bold, // ทำตัวอักษรหนา
+                            ),
+                          ),
+                        SizedBox(height: 0),
+                        // --- ตรงนี้ปรับเป็น Animated/Pulse ---
+                        if (isHintButtonCooldown)
+                          // ถ้าอยู่คูลดาวน์ => ใช้รูป inactive ปกติ (ไม่มี animation)
+                          Image.asset(
+                            'assets/images/linegamelist/hint_button_inactive.png',
+                            width: imageWidth * 0.08,
+                            height: imageHeight * 0.08,
+                          )
+                        else
+                          // ถ้าไม่คูลดาวน์ => ใส่ ScaleTransition + animation
+                          ScaleTransition(
+                            scale: _hintScaleAnim, // ใช้อนิเมชันขยาย/หด
+                            child: Image.asset(
+                              'assets/images/linegamelist/hint_button_active.png',
+                              width: imageWidth * 0.08,
+                              height: imageHeight * 0.08,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                // ----- ปุ่ม FloatingButton Icon ย้อนกลับ -----
+                Positioned(
+                  top: screenSize.height * 0.05, // ระยะจากขอบบน
+                  right: screenSize.width * 0.04, // ระยะจากขอบซ้าย
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true, // ปิดเมื่อกดด้านนอก
+                        builder: (BuildContext context) =>
+                            _buildExitPopUp(context),
+                      );
                       gameController.pauseCountdown();
-                    });
-                  },
-                  backgroundColor: Colors.white.withOpacity(0),
-                  elevation: 0,
-                  hoverElevation: 0,
-                  focusElevation: 0,
-                  highlightElevation: 0,
-                  child: Image.asset(
-                    'assets/images/HintButton.png',
-                  )),
-            ),
-          ),
-          // แสดง TutorialWidget
-          if (showTutorial) _buildTutorialWidget(),
+                    },
+                    backgroundColor:
+                        Colors.white.withOpacity(0), // สีพื้นหลังปุ่ม
+                    elevation: 0, // ไม่มีเงา
+                    hoverElevation: 0, // ไม่มีเงาเมื่อโฮเวอร์
+                    focusElevation: 0, // ไม่มีเงาเมื่อโฟกัส
+                    highlightElevation: 0, // ไม่มีเงาเมื่อกด
+                    child: Icon(Icons.close_rounded,
+                        size: screenSize.width * 0.040,
+                        color: Colors.black), // ไอคอน
+                  ),
+                ),
 
-          // ----- ถ้า showResult => แสดง ResultWidget
-          if (showResult && isGameWin)
-            ResultWidget(
-              onLevelComplete: isGameWin, // ตัวอย่าง
-              starsEarned: gameController.starEarned,
-              onButton1Pressed: () {
-                setState(() {
-                  showResult = false; // ปิดหน้า Result
-                  isGameWin = false; // ถ้าอยากเคลียร์สถานะ UI
-                  widget.game.resetGame();
-                  gameController.starEarned = 3; // รีเซ็ตดาวที่ได้
-                });
-              },
-              onButton2Pressed: () {
-                Navigator.pop(context);
-              },
+                ProgressBarLineEasyWidget(
+                    remainingTime: gameController.currentTime,
+                    maxTime: 120,
+                    starCount: gameController.starEarned),
+
+                // ปุ่ม Info สำหรับเปิด TutorialWidget
+                Positioned(
+                  bottom: screenSize.height * 0.03,
+                  right: screenSize.width * 0.03,
+                  child: SizedBox(
+                    width: screenSize.width * 0.08,
+                    height: screenSize.height * 0.11,
+                    child: FloatingActionButton(
+                        onPressed: () {
+                          setState(() {
+                            showTutorial = true; // เปิด TutorialWidget
+                            gameController.pauseCountdown();
+                          });
+                        },
+                        backgroundColor: Colors.white.withOpacity(0),
+                        elevation: 0,
+                        hoverElevation: 0,
+                        focusElevation: 0,
+                        highlightElevation: 0,
+                        child: Image.asset(
+                          'assets/images/HintButton.png',
+                        )),
+                  ),
+                ),
+                // แสดง TutorialWidget
+                if (showTutorial)
+                  AnimatedOpacity(
+                    opacity: showTutorial ? 1.0 : 0.0,
+                    duration: Duration(milliseconds: 1000),
+                    child: _buildTutorialWidget(tutorialIndex),
+                  ),
+
+                // ----- ถ้า showResult => แสดง ResultWidget
+                if (showResult && isGameWin)
+                  ResultWidget(
+                    onLevelComplete: isGameWin, // ตัวอย่าง
+                    starsEarned: gameController.starEarned,
+                    onButton1Pressed: () {
+                      setState(() {
+                        showResult = false; // ปิดหน้า Result
+                        isGameWin = false; // ถ้าอยากเคลียร์สถานะ UI
+                        widget.game.resetGame();
+                        gameController.starEarned = 3; // รีเซ็ตดาวที่ได้
+                        showTutorial = true; // เปิด TutorialWidget
+                        gameController.pauseCountdown();
+                      });
+                    },
+                    onButton2Pressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                if (showResult && !isGameWin)
+                  ResultWidget(
+                    onLevelComplete: isGameWin, // ตัวอย่าง
+                    starsEarned: gameController.starEarned,
+                    onButton1Pressed: () {
+                      Navigator.pop(context);
+                    },
+                    onButton2Pressed: () {
+                      setState(() {
+                        showResult = false; // ปิดหน้า Result
+                        isGameWin = false; // ถ้าอยากเคลียร์สถานะ UI
+                        widget.game.resetGame();
+                        gameController.starEarned = 3; // รีเซ็ตดาวที่ได้
+                        showTutorial = true; // เปิด TutorialWidget
+                        gameController.pauseCountdown();
+                      });
+                    },
+                  ),
+              ],
             ),
-          if (showResult && !isGameWin)
-            ResultWidget(
-              onLevelComplete: isGameWin, // ตัวอย่าง
-              starsEarned: gameController.starEarned,
-              onButton1Pressed: () {
-                Navigator.pop(context);
-              },
-              onButton2Pressed: () {
-                setState(() {
-                  showResult = false; // ปิดหน้า Result
-                  isGameWin = false; // ถ้าอยากเคลียร์สถานะ UI
-                  widget.game.resetGame();
-                  gameController.starEarned = 3; // รีเซ็ตดาวที่ได้
-                });
-              },
-            ),
-        ],
-      ),
-    );
+          );
+        });
   }
-//TO DO LIST PROCRESSBAR
-  // Widget _buildProcressBar(BuildContext context, int starCount) {
-  //   Size screenSize = MediaQuery.of(context).size;
 
-  //   return Positioned(
-  //     bottom: screenSize.height * 0.05,
-  //     left: screenSize.width * 0.01,
-  //     child: ProgressBarLineEasyWidget(
-  //       getStars: starCount,
-  //       remainingTime: gameController.currentTime, // ใช้ ValueNotifier
-  //       onMissedPoint: () {
-  //         gameController.currentTime.value -= 5; // ลดเวลาใน ValueNotifier
-  //       },
-  //     ),
-  //   );
-  // }
   Widget _buildExitPopUp(BuildContext context) {
     double imageWidth = MediaQuery.of(context).size.width;
     double imageHeight = MediaQuery.of(context).size.height;
@@ -420,7 +440,11 @@ class _DrawLineGameScreenState extends State<DrawLineGameScreen>
     );
   }
 
-  Widget _buildTutorialWidget() {
+  Widget _buildTutorialWidget(int index) {
+    List<String> tutorialImages = [
+      'assets/images/linegamelist/tutorial_easy_1.png',
+      'assets/images/linegamelist/tutorial_easy_2.png',
+    ];
     // Widget สำหรับแสดง Tutorial
     return GestureDetector(
       onTap: () {
@@ -455,7 +479,7 @@ class _DrawLineGameScreenState extends State<DrawLineGameScreen>
                   ),
                   padding: const EdgeInsets.all(10),
                   child: Image.asset(
-                    'assets/images/Hint3.png', // แก้รูปภาพการสอน
+                    tutorialImages[index], // แก้รูปภาพการสอน
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -517,9 +541,9 @@ class LineGameController {
   // pause การนับถอยหลัง
   void pauseCountdown() {
     if (_countdownTimer != null) {
+      isPaused = true;
       stopCountdown();
       remainingTime = currentTime.value; // เก็บเวลาที่เหลือ
-      isPaused = true;
     }
   }
 
@@ -541,10 +565,10 @@ class LineGameController {
     if (isTimeUp) {
       starEarned = 0;
     } else {
-      final used = timeUsed ?? (120 - currentTime.value);
-      if (used <= 60)
+      final used = timeUsed ?? (initialTime - currentTime.value);
+      if (used <= 49)
         starEarned = 3;
-      else if (used <= 90)
+      else if (used <= 85)
         starEarned = 2;
       else if (used <= 119) starEarned = 1;
     }
@@ -571,6 +595,7 @@ class MinimalLineGame extends FlameGame {
   late SpriteComponent background;
   late SpriteComponent hintImage;
   late SpriteComponent hiddenImage;
+  ValueNotifier<int> currentLevelIndex = ValueNotifier<int>(0);
   bool isHintActive = false;
 
   // --- ข้อมูลเลเวลทั้งหมด ---
@@ -644,7 +669,6 @@ class MinimalLineGame extends FlameGame {
       loopBack: true, // ยังไม่ปิดลูป
     ),
   ];
-  int currentLevelIndex = 0; // เริ่มที่เลเวลแรก (index=0)
   int targetIndex = 1; // เป้าหมายแรก: จากจุด 0 ไปจุด 1
   final List<Line> lines = []; // เก็บลิสต์ของเส้นทั้งหมด
   bool isLineComplete = false; // สถานะของเส้นที่ "สมบูรณ์" (ลากนิ้วจบแล้ว)
@@ -655,7 +679,7 @@ class MinimalLineGame extends FlameGame {
     await super.onLoad();
 
     // พื้นหลัง
-    final bgSprite = await loadSprite('linegamelist/gridblue.png');
+    final bgSprite = await loadSprite('linegamelist/gridblue1.png');
     background = SpriteComponent()
       ..sprite = bgSprite
       ..size = size
@@ -759,7 +783,7 @@ class MinimalLineGame extends FlameGame {
   }
 
   Future<void> loadHintImagesForCurrentLevel() async {
-    final levelNum = currentLevelIndex + 1;
+    final levelNum = currentLevelIndex.value + 1;
     // ตัวอย่างชื่อไฟล์ => "linegamelist/level1.png"
     final hintFile = "linegamelist/level$levelNum.png";
     final hideFile = "linegamelist/level${levelNum}_hide.png";
@@ -818,10 +842,10 @@ class MinimalLineGame extends FlameGame {
     }
   }
 
-  void showHint() {
+  Future<void> showHint() async {
     // เรียกใช้เมื่อกดปุ่ม Hint
     isHintActive = true;
-    async.Future.delayed(const Duration(milliseconds: 2400), () {
+    await Future.delayed(const Duration(milliseconds: 5400), () {
       isHintActive = false;
     });
   }
@@ -835,7 +859,7 @@ class MinimalLineGame extends FlameGame {
 
   double currentSliderValue = 0;
 
-  LevelData get currentLevel => levels[currentLevelIndex];
+  LevelData get currentLevel => levels[currentLevelIndex.value];
   List<Offset> get points => currentLevel.points;
   List<int> get requiredCurves => currentLevel.requiredCurves;
   bool get loopBack => currentLevel.loopBack;
@@ -875,7 +899,7 @@ class MinimalLineGame extends FlameGame {
     final localPos = Offset(normalizedPos.dx * w, normalizedPos.dy * h);
 
     // ถ้าลากใกล้จุดเริ่มต้น => สร้างเส้นใหม่
-    if ((screenPoint - localPos).distance < 20) {
+    if ((screenPoint - localPos).distance < 40) {
       final newLine = Line(localPos, localPos);
       add(newLine); // เพิ่มเส้นลงในเกม
       lines.add(newLine);
@@ -932,7 +956,7 @@ class MinimalLineGame extends FlameGame {
     }
 
     // ถ้าลากใกล้เป้าหมาย => ถือว่าถูก
-    if ((endPixel - targetPixel).distance < 20) {
+    if ((endPixel - targetPixel).distance < 40) {
       // ลากถึงเป้าหมาย
       line.end = targetPixel;
 
@@ -976,18 +1000,17 @@ class MinimalLineGame extends FlameGame {
       currentLine.color = const Color.fromARGB(255, 153, 235, 72);
       currentLine.isLocked = true; // <--- ล็อกเส้นนี้
       isLineComplete = false;
-      targetIndex++;
-      if (targetIndex > points.length) {
-        // ตรวจว่านี่เป็นเลเวลสุดท้ายไหม
-        if (currentLevelIndex == levels.length - 1) {
-          //TO DO: เรียกโชว์อนิเมชั่นดาว
-          // แล้วถ้าคุณอยากโชว์อนิเมชั่นดาว => เรียก
-          showCongratsSimple();
 
-          // หรือ showCongratsPhysics() ก็ได้
-          // อยู่เลเวลสุดท้าย => แสดง Result
-          print("Completed the final level => show result");
-          // เรียก gameController => onAllLevelComplete => แสดง UI
+      // ✅ ถ้าเป็นเส้นสุดท้าย -> หยุดเวลา
+      if (targetIndex == points.length) {
+        gameController?.pauseCountdown();
+      }
+      targetIndex++;
+      // ตรวจว่านี่เป็นเลเวลสุดท้ายไหม
+      if (targetIndex > points.length) {
+        gameController?.pauseCountdown;
+        if (currentLevelIndex == levels.length - 1) {
+          showCongratsSimple();
           async.Future.delayed(const Duration(seconds: 1), () {
             gameController?.onAllLevelComplete();
           });
@@ -1000,15 +1023,12 @@ class MinimalLineGame extends FlameGame {
             }
             congratsStars.clear();
           });
-          // ยังไม่ใช่เลเวลสุดท้าย => ให้ FadeOut + goToNextLevel
-          print("Completed level $currentLevelIndex => next level");
           async.Future.delayed(const Duration(seconds: 1), () {
             add(FadeOutEffectComponent());
           });
         }
       }
     } else {
-      print("Incorrect curve -> PullBackLine");
       // incorrect
       // เปลี่ยนสี line => แดง
       currentLine.color = Colors.red;
@@ -1020,9 +1040,9 @@ class MinimalLineGame extends FlameGame {
   }
 
   // ไปเลเวลถัดไป
-  void goToNextLevel() {
-    currentLevelIndex++;
-    if (currentLevelIndex >= levels.length) {
+  void goToNextLevel() async {
+    currentLevelIndex.value++;
+    if (currentLevelIndex.value >= levels.length) {
       // จบทุกเลเวล
       print("All Levels are complete!");
 
@@ -1042,9 +1062,12 @@ class MinimalLineGame extends FlameGame {
     isLineComplete = false;
     targetIndex = 1;
 // โหลดรูป hint/hide ใหม่
+    gameController?.resumeCountdown();
     loadHintImagesForCurrentLevel(); // เรียกฟังก์ชันที่เราสร้าง
 
-    print("Now start Level ${currentLevelIndex + 1}");
+    await showHint(); // แสดง hint ใหม่
+
+    print("Now start Level ${currentLevelIndex.value + 1}");
   }
 
   // รีเซ็ตเกมทั้งหมด
@@ -1063,7 +1086,7 @@ class MinimalLineGame extends FlameGame {
     congratsStars.clear();
 
     // 2) รีเซ็ตตัวแปรเกมกลับด่านแรก
-    currentLevelIndex = 0;
+    currentLevelIndex.value = 0;
     targetIndex = 1;
     isLineComplete = false;
     isHintActive = false;
@@ -1132,8 +1155,8 @@ class MinimalLineGame extends FlameGame {
       ..style = PaintingStyle.fill;
 
     for (var p in scaledPoints) {
-      canvas.drawCircle(p, 14, strokePaint);
-      canvas.drawCircle(p, 14, pointPaint);
+      canvas.drawCircle(p, 20, strokePaint);
+      canvas.drawCircle(p, 20, pointPaint);
     }
 
     // วาดเส้น

@@ -6,6 +6,8 @@ import 'package:firstly/screens/linegamelist.dart';
 import 'package:firstly/screens/shapegamelist.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../function/background_audio_manager.dart';
 // import 'shared_prefs_service.dart';
 // import 'chapter.dart';
 
@@ -20,7 +22,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
     with TickerProviderStateMixin {
   // ตัวแปรสถานะของกุญแจที่ผู้เล่นมีสำหรับแต่ละด่าน
   bool hasKey1 = true; //ลบ
-  bool hasKey2 = false;
+  bool hasKey2 = true;
   bool hasKey3 = false;
   bool hasKey4 = false;
 
@@ -82,7 +84,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
     _loadKeyStatus(); // โหลดสถานะกุญแจ
 
     // กำหนดสถานะการปลดล็อกของแต่ละด่าน
-    levelUnlocked = [true, false, false, false];
+    levelUnlocked = [true, true, false, false];
 
     // สร้าง AnimationController สำหรับแต่ละด่าน
     lockShakeControllers = List.generate(gameImages.length, (index) {
@@ -115,12 +117,6 @@ class _GameSelectionPageState extends State<GameSelectionPage>
       hasKey2 = loadedKey2 ?? false; // อัปเดต UI
       print('Loaded hasKey2: $hasKey2'); // เพิ่มการดีบัค
     }); // อัปเดต UI
-  }
-
-  void _clearKeyStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('hasKey2'); // ลบข้อมูล hasKey2 ออกจาก SharedPreferences
-    print('Cleared hasKey2'); // เพิ่มการดีบัค
   }
 
   // ฟังก์ชันบันทึกสถานะกุญแจใน SharedPreferences
@@ -195,6 +191,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
     return StatefulBuilder(builder: (context, localSetState) {
       return GestureDetector(
         onTap: () {
+          BackgroundAudioManager().playButtonClickSound(); // เล่นเสียงกดปุ่ม
           if (levelUnlocked[index]) {
             // ด่านถูกปลดล็อกแล้ว นำทางไปยังหน้าด่านเกมของคุณ
             navigateToLevelPage(index);
@@ -212,6 +209,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
                 });
               });
             } else {
+              BackgroundAudioManager().playChapterLockSound(); // เล่นเสียงล็อก
               // ผู้เล่นไม่มีกุญแจ เริ่มอนิเมชันการสั่นและแสดงข้อความเตือน
               shakeController.forward(from: 0);
               showNoKeyWarning();
@@ -518,6 +516,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
       top: screenSize.height * 0.028,
       child: FloatingActionButton(
         onPressed: () {
+          BackgroundAudioManager().playButtonBackSound();
           Navigator.push(
             context,
             PageRouteBuilder(

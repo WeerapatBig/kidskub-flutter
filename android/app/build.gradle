@@ -3,6 +3,7 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -32,11 +33,39 @@ android {
         versionName = "1.0" // กำหนด versionName ของแอป
     }
 
+    // 🔹 เพิ่ม `flavorDimensions` และ `productFlavors`
+    flavorDimensions "mode"
+
+    productFlavors {
+        full {
+            dimension "mode"
+            applicationIdSuffix ".full"
+            versionNameSuffix "-full"
+            resValue "string", "app_name", "Full Game"
+        }
+        kidsKubDebug {
+            dimension "mode"
+            applicationIdSuffix ".kidskubdebug"
+            versionNameSuffix "-kidskubdebug"
+            resValue "string", "app_name", "KidsKub Debug"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (variant.flavorName == "full") {
+                output.outputFileName = "Full_Game.apk" // ✅ ไฟล์สำหรับแอปหลัก
+            } else if (variant.flavorName == "test") {
+                output.outputFileName = "Test_App.apk" // ✅ ไฟล์สำหรับแอป Test App
+            }
         }
     }
 }
@@ -48,4 +77,10 @@ flutter {
 dependencies {
     implementation "androidx.fragment:fragment:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+
+    // ลอง exclude libraries ที่อาจทำให้เกิดปัญหา
+    configurations.all {
+        exclude group: "androidx.lifecycle", module: "lifecycle-viewmodel-savedstate"
+        exclude group: "androidx.activity", module: "activity-ktx"
+    }
 }

@@ -1,16 +1,18 @@
 import 'dart:math';
 import 'dart:ui';
 //import 'package:firstly/screens/dotgame.dart';
-import 'package:firstly/function/showkey.dart';
-import 'package:firstly/function/showsticker.dart';
-import 'package:firstly/screens/dotgamehard.dart';
-import 'package:firstly/screens/motionlevel1.dart';
-import 'package:firstly/screens/quizgamedot.dart';
+import 'package:firstly/widgets/showkey.dart';
+import 'package:firstly/widgets/showsticker.dart';
+import 'package:firstly/screens_chapter1/dotgamehard.dart';
+import 'package:firstly/screens_chapter1/motionlevel1.dart';
+import 'package:firstly/screens_chapter1/quizgamedot.dart';
 //import 'package:firstly/screens/quizlevel1.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
-import 'package:firstly/screens/dotgameeasy.dart';
+import 'package:firstly/screens_chapter1/dotgameeasy.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
+
+import '../function/background_audio_manager.dart';
 
 class DotGameList extends StatefulWidget {
   const DotGameList({super.key});
@@ -23,9 +25,9 @@ class _DotGameListState extends State<DotGameList>
     with TickerProviderStateMixin {
   // สถานะการปลดล็อคของด่านต่างๆ
   bool isLevel1Unlocked = true;
-  bool isLevel2Unlocked = false;
-  bool isLevel3Unlocked = false;
-  bool isQuizUnlocked = false;
+  bool isLevel2Unlocked = true;
+  bool isLevel3Unlocked = true;
+  bool isQuizUnlocked = true;
 
   bool isWarningVisible = false;
 
@@ -43,6 +45,9 @@ class _DotGameListState extends State<DotGameList>
   void initState() {
     super.initState();
     levels = initializeLevels();
+
+    // เล่นเพลงเมื่อเข้าหน้านี้
+    BackgroundAudioManager().playBackgroundMusic();
   }
 
   void updateTotalStars() {
@@ -202,6 +207,7 @@ class _DotGameListState extends State<DotGameList>
       top: buttonHeight,
       child: FloatingActionButton(
         onPressed: () {
+          BackgroundAudioManager().playButtonBackSound(); // เล่นเสียงกดปุ่ม
           //onBackButtonPressed();
           Navigator.push(
             context,
@@ -329,6 +335,8 @@ class _DotGameListState extends State<DotGameList>
 
   void _onLevelTap(BuildContext context, Map<String, dynamic> level) async {
     if (level['unlocked'] == true) {
+      // หยุดเพลงก่อนเข้าสู่ Level
+      BackgroundAudioManager().pauseBackgroundMusic();
       dynamic result;
       if (level['name'] == 'Motion') {
         result = await Navigator.push(
@@ -337,6 +345,8 @@ class _DotGameListState extends State<DotGameList>
             builder: (context) => MotionLevel1(),
           ),
         );
+        // หยุดเพลงก่อนเข้าสู่ Level
+        BackgroundAudioManager().playBackgroundMusic();
         // ดีบัคเพื่อดูค่าที่ได้รับจาก MotionLevel1
         print('Received result from MotionLevel1: $result');
 
@@ -824,6 +834,8 @@ class _CharacterAnimationState extends State<CharacterAnimation>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // เรียกเมื่อหน้ากลับมาทำงาน
+    BackgroundAudioManager().playBackgroundMusic();
 
     double screenWidth = MediaQuery.of(context).size.width;
     double characterSize = screenWidth * 0.1;

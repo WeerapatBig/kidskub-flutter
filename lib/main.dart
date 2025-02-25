@@ -1,114 +1,30 @@
-import 'package:firstly/function/background_audio_manager.dart';
-import 'package:firstly/function/gamesettingsdialog.dart';
-import 'package:firstly/function/progressbar_lineeasy.dart';
-import 'package:firstly/function/result_widget_quiz.dart';
-//import 'package:firstly/function/progressbar_dothard.dart';
-//import 'package:firstly/function/result_widget.dart';
-import 'package:firstly/function/showsticker.dart';
-import 'package:firstly/screens/colorgame_easy.dart';
-import 'package:firstly/screens/colorgamehard.dart';
-import 'package:firstly/screens/dotgamehard.dart';
-import 'package:firstly/screens/dotgamelist.dart';
-import 'package:firstly/screens/gameline2.dart';
-import 'package:firstly/screens/gamelinehard.dart';
-import 'package:firstly/screens/gameselectionpage.dart';
-import 'package:firstly/screens/homepage.dart';
-import 'package:firstly/screens/linegamelist.dart';
-import 'package:firstly/screens/motionlevel1.dart';
-import 'package:firstly/screens/quizgamedot.dart';
-import 'package:firstly/screens/strickerbook.dart';
-import 'package:firstly/screens/dotgameeasy.dart';
-import 'package:firstly/screens/shared_prefs_service.dart';
-import 'package:firstly/screens_chapter2/line_game_test.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-//import 'package:flutter/rendering.dart'; //เปิดการแสดงผลขอบเขต Widget
+import 'dart:io';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+import 'package:flutter/widgets.dart';
 
-  // เรียกใช้การล้าง SharedPreferences
-  final SharedPrefsService sharedPrefsService = SharedPrefsService();
-  await sharedPrefsService.clearAllPreferences();
+void main() {
+  const String flavor = String.fromEnvironment('FLAVOR', defaultValue: 'full');
 
-  final StickerBookPrefsService prefsService = StickerBookPrefsService();
-  await prefsService.clearAllPreferences();
-
-  BackgroundAudioManager(); // สร้างอินสแตนซ์เพื่อเริ่มต้นเสียงเพลง
-  // ตั้งค่าหน้าจอเป็นแนวนอนเท่านั้น
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeRight,
-    DeviceOrientation.landscapeLeft,
-  ]);
-  //debugPaintSizeEnabled = true; // เปิดการแสดงผลขอบเขต Widget
-  runApp(const DesignQuestApp());
+  if (flavor == 'full') {
+    WidgetsFlutterBinding.ensureInitialized(); // ✅ เพิ่มบรรทัดนี้
+    Future.delayed(Duration.zero, () {
+      runFull();
+    });
+  } else if (flavor == 'test') {
+    Future.delayed(Duration.zero, () {
+      runTest();
+    });
+  } else {
+    throw UnsupportedError("Flavor '$flavor' is not supported.");
+  }
 }
 
-class DesignQuestApp extends StatelessWidget {
-  const DesignQuestApp({Key? key}) : super(key: key);
+void runFull() {
+  print("Running Full Version");
+  Process.run('flutter', ['run', '--target=lib/main_full.dart']);
+}
 
-  @override
-  Widget build(BuildContext context) {
-    ValueNotifier<int> remainingTime = ValueNotifier<int>(120);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/line_game_test',
-      theme: ThemeData(
-        textTheme: GoogleFonts.kodchasanTextTheme(),
-      ),
-      routes: {
-        '/': (context) => const HomePage(),
-        '/gamesettingsdialog': (context) => const GameSettingsDialog(),
-        '/strickerbook': (context) => const StickerBookPage(),
-        '/showsticker': (context) => const ShowStickerPage(
-              stickerKey: 'stricker1',
-            ),
-        '/gameselectionpage': (context) => const GameSelectionPage(),
-
-        '/line_game_test': (contex) => DrawLineGameScreen(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
-        '/gameline-2': (context) => const GameLine2(), // Example of "เกมเส้น"
-        '/dotgamehard': (context) => const DotGameHard(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
-        '/colorgamehard': (context) => const ColorGameHard(),
-        '/quizgamedot': (context) => const DotQuizGame(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
-        '/colorgame_easy': (context) => const GameColorEasyScreen(),
-        '/gamelinehard': (context) => const LineGameHard(),
-        '/dotgamelist': (context) => const DotGameList(),
-        '/linegamelist': (context) => const LineGameList(),
-        '/dotgameeasy': (context) => const DotGameEasy(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
-        '/result_widget_quiz': (context) => ResultWidgetQuiz(
-              onLevelComplete: true,
-              starsEarned: 0,
-              onButton1Pressed: () {
-                // ฟังก์ชันเมื่อปุ่มที่ 1 ถูกกด (เล่นอีกครั้ง)
-                Navigator.pushReplacementNamed(context, '/playAgain');
-              },
-              onButton2Pressed: () {
-                // ฟังก์ชันเมื่อปุ่มที่ 2 ถูกกด (หน้าถัดไป)
-                Navigator.pushReplacementNamed(context, '/nextLevel');
-              },
-            ),
-        '/progressbar_lineeasy': (context) => ProgressBarLineEasyWidget(
-              remainingTime: remainingTime,
-              maxTime: 120,
-              starCount: 3,
-            ),
-        // '/progressbar_dothard': (context) =>
-        //     const ProgressBarDotHardWidget(remainingTime: 60, getStars: 1),
-        '/motionlevel1': (context) => MotionLevel1(),
-      },
-    );
-  }
+void runTest() {
+  print("Running Test Version");
+  Process.run('flutter', ['run', '--target=lib/main_level1.dart']);
 }

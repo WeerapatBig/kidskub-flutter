@@ -1,12 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
-import 'package:firstly/function/showkey.dart';
-import 'package:firstly/function/showsticker.dart';
-import 'package:firstly/screens/dotgamehard.dart';
-import 'package:firstly/screens/motionlevel1.dart';
-import 'package:firstly/screens/quizgamedot.dart';
+import 'package:firstly/widgets/showkey.dart';
+import 'package:firstly/widgets/showsticker.dart';
+import 'package:firstly/screens_chapter1/motionlevel1.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
-import 'package:firstly/screens/dotgameeasy.dart';
+import 'package:firstly/screens_chapter2/line_game_hard_screen.dart';
+import 'package:firstly/screens_chapter2/line_game_quiz.dart';
+import 'package:firstly/screens_chapter2/line_game_test.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
 
@@ -21,9 +21,9 @@ class _LineGameListState extends State<LineGameList>
     with TickerProviderStateMixin {
   // สถานะการปลดล็อคของด่านต่างๆ
   bool isLevel1Unlocked = true;
-  bool isLevel2Unlocked = false;
-  bool isLevel3Unlocked = false;
-  bool isQuizUnlocked = false;
+  bool isLevel2Unlocked = true;
+  bool isLevel3Unlocked = true;
+  bool isQuizUnlocked = true;
 
   bool isWarningVisible = false;
 
@@ -93,7 +93,7 @@ class _LineGameListState extends State<LineGameList>
         'name': 'Level 2',
         'unlocked': isLevel2Unlocked,
         'lockedImage': 'assets/images/linegamelist/card_lock.png',
-        'unlockedImage': 'assets/images/dotchapter/lv1_card_unlock.png',
+        'unlockedImage': 'assets/images/linegamelist/lv1_card_unlock.png',
         'maxStars': 3,
         'earnedStars': 0,
         'starColor': 'yellow',
@@ -103,7 +103,7 @@ class _LineGameListState extends State<LineGameList>
         'name': 'Level 3',
         'unlocked': isLevel3Unlocked,
         'lockedImage': 'assets/images/linegamelist/card_lock.png',
-        'unlockedImage': 'assets/images/dotchapter/lv2_card_unlock.png',
+        'unlockedImage': 'assets/images/linegamelist/lv2_card_unlock.png',
         'maxStars': 3,
         'earnedStars': 0,
         'starColor': 'yellow',
@@ -113,7 +113,7 @@ class _LineGameListState extends State<LineGameList>
         'name': 'Quiz',
         'unlocked': isQuizUnlocked,
         'lockedImage': 'assets/images/linegamelist/card_lock.png',
-        'unlockedImage': 'assets/images/dotchapter/quiz_card_unlock.png',
+        'unlockedImage': 'assets/images/linegamelist/quiz_card_unlock.png',
         'maxStars': 1,
         'earnedStars': 0,
         'starColor': 'purple',
@@ -376,7 +376,7 @@ class _LineGameListState extends State<LineGameList>
         result = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DotGameEasy(
+            builder: (context) => DrawLineGameScreen(
               starColor: level['starColor'],
               earnedStars: level['earnedStars'],
             ),
@@ -424,10 +424,7 @@ class _LineGameListState extends State<LineGameList>
         result = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DotGameHard(
-              starColor: level['starColor'],
-              earnedStars: level['earnedStars'],
-            ),
+            builder: (context) => const LineGameHardScreen(),
           ),
         );
 
@@ -455,10 +452,8 @@ class _LineGameListState extends State<LineGameList>
         result = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DotQuizGame(
-              starColor: level['starColor'],
-              earnedStars: level['earnedStars'],
-            ), // เพิ่มหน้า QuizPage() ตามที่ต้องการ
+            builder: (context) =>
+                QuizLineGame(), // เพิ่มหน้า QuizPage() ตามที่ต้องการ
           ),
         );
         if (result != null) {

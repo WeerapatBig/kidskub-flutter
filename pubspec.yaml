@@ -44,7 +44,7 @@ dependencies:
   video_player: ^2.9.2
   google_fonts: ^6.2.1
   just_audio: ^0.9.42
-  flame: ^1.22.0
+  flame: ^1.24.0
   characters: ^1.3.0
   flame_forge2d: ^0.18.2+3
   flame_kenney_xml: ^0.1.1+3
@@ -171,27 +171,6 @@ flutter:
   - assets/images/selectionpage/shape_lock1.png
   - assets/images/selectionpage/shape_lock2.png
 
-  - assets/images/linegamelist/card_comic.png
-  - assets/images/linegamelist/card_lock.png
-  - assets/images/linegamelist/charactor_line.png
-  - assets/images/linegamelist/gridblue.png
-  - assets/images/linegamelist/level1_hide.png
-  - assets/images/linegamelist/level1.png
-  - assets/images/linegamelist/level2_hide.png
-  - assets/images/linegamelist/level2.png
-  - assets/images/linegamelist/level3_hide.png
-  - assets/images/linegamelist/level3.png
-  - assets/images/linegamelist/level4_hide.png
-  - assets/images/linegamelist/level4.png
-  - assets/images/linegamelist/hint_button_active.png
-  - assets/images/linegamelist/hint_button_inactive.png
-  - assets/images/linegamelist/exit_button.png
-  - assets/images/linegamelist/resume_button.png
-  - assets/images/linegamelist/time_bar.png
-  - assets/images/linegamelist/clock.png
-  - assets/images/linegamelist/star_empty.png
-  - assets/images/linegamelist/star_full.png
-  - assets/images/linegamelist/starcongrats.png
 
   - assets/images/dotchapter/chractor1.png
   - assets/images/dotchapter/bg.png
@@ -270,6 +249,128 @@ flutter:
   - assets/images/quizdot/bg_grid_quizdot.png
   - assets/images/quizdot/send.png
   - assets/images/quizdot/hearts_bg.png
+  
+  - assets/images/close_button.png
+  - assets/images/reload_button.png
+  - assets/images/linegamelist/hp.png
+  - assets/images/linegamelist/hp_empty.png
+  - assets/images/linegamelist/card_comic.png
+  - assets/images/linegamelist/lv1_card_unlock.png
+  - assets/images/linegamelist/lv2_card_unlock.png
+  - assets/images/linegamelist/quiz_card_unlock.png
+  - assets/images/linegamelist/card_lock.png
+  - assets/images/linegamelist/charactor_line.png
+  - assets/images/linegamelist/gridblue.png
+  - assets/images/linegamelist/gridblue1.png
+  - assets/images/linegamelist/level1_hide.png
+  - assets/images/linegamelist/level1.png
+  - assets/images/linegamelist/level2_hide.png
+  - assets/images/linegamelist/level2.png
+  - assets/images/linegamelist/level3_hide.png
+  - assets/images/linegamelist/level3.png
+  - assets/images/linegamelist/level4_hide.png
+  - assets/images/linegamelist/level4.png
+  - assets/images/linegamelist/hint_button_active.png
+  - assets/images/linegamelist/hint_button_inactive.png
+  - assets/images/linegamelist/exit_button.png
+  - assets/images/linegamelist/resume_button.png
+  - assets/images/linegamelist/time_bar.png
+  - assets/images/linegamelist/clock.png
+  - assets/images/linegamelist/star_empty.png
+  - assets/images/linegamelist/star_full.png
+  - assets/images/linegamelist/star_elm.png
+  - assets/images/linegamelist/starcongrats.png
+  - assets/images/linegamelist/flag.png
+  - assets/images/linegamelist/tutorial_hard_1.png
+  - assets/images/linegamelist/tutorial_hard_2.png
+  - assets/images/linegamelist/tutorial_easy_1.png
+  - assets/images/linegamelist/tutorial_easy_2.png
+
+  - assets/images/linegamelist/obstacle/obs_1.png
+  - assets/images/linegamelist/obstacle/obs_2.png
+  - assets/images/linegamelist/obstacle/obs_3.png
+  - assets/images/linegamelist/obstacle/moving_obs.png
+  - assets/images/linegamelist/obstacle/rect_obs_1.png
+  - assets/images/linegamelist/obstacle/rect_obs_2.png
+  - assets/images/linegamelist/obstacle/rect_obs_3.png
+  - assets/images/linegamelist/obstacle/rect_obs_4.png
+  - assets/images/linegamelist/obstacle/circle_obs_1.png
+  - assets/images/linegamelist/obstacle/circle_obs_2.png
+  - assets/images/linegamelist/obstacle/elm_01.png
+  - assets/images/linegamelist/obstacle/elm_02.png
+  - assets/images/linegamelist/obstacle/arrowguide.png
+
+  - assets/images/linegamelist/line_quiz/answers_1.png
+  - assets/images/linegamelist/line_quiz/answers_2.png
+  - assets/images/linegamelist/line_quiz/answers_3.png
+  - assets/images/linegamelist/line_quiz/answers_4.png
+  - assets/images/linegamelist/line_quiz/answers_5.png
+  - assets/images/linegamelist/line_quiz/answers_6.png
+  - assets/images/linegamelist/line_quiz/answers_7.png
+  - assets/images/linegamelist/line_quiz/answers_8.png
+  - assets/images/linegamelist/line_quiz/answers_9.png
+  - assets/images/linegamelist/line_quiz/question_1.png
+  - assets/images/linegamelist/line_quiz/question_2.png
+  - assets/images/linegamelist/line_quiz/question_3.png
+  - assets/images/linegamelist/line_quiz/question_4.png
+  - assets/images/linegamelist/line_quiz/question_5.png
+  - assets/images/linegamelist/line_quiz/question_6.png
+  - assets/images/linegamelist/line_quiz/question_7.png
+  - assets/images/linegamelist/line_quiz/question_8.png
+  - assets/images/linegamelist/line_quiz/question_9.png
+  - assets/images/linegamelist/line_quiz/tutorial_quiz.png
+  - assets/images/linegamelist/line_quiz/paper_bg.png
+  - assets/images/linegamelist/line_quiz/objective.png
+  - assets/images/linegamelist/line_quiz/inactive_check_button.png
+  - assets/images/linegamelist/line_quiz/active_check_button.png
+
+  - assets/images/shapegame/tutorial_shape_easy.gif
+  - assets/images/shapegame/BG_shape_game.png
+  - assets/images/shapegame/grid_green.png
+  - assets/images/shapegame/check.png
+  - assets/images/shapegame/cross.png
+  - assets/images/shapegame/game_easy/shape_easy_1.png
+  - assets/images/shapegame/game_easy/shape_easy_2.png
+  - assets/images/shapegame/game_easy/shape_easy_3.png
+  - assets/images/shapegame/game_easy/shape_easy_4.png
+  - assets/images/shapegame/game_easy/shape_easy_5.png
+  - assets/images/shapegame/game_easy/shape_easy_6.png
+  - assets/images/shapegame/game_easy/shape_easy_7.png
+  - assets/images/shapegame/game_easy/shape_easy_8.png
+  - assets/images/shapegame/game_easy/shape_easy_9.png
+  - assets/images/shapegame/game_easy/shape_easy_10.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_1.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_2.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_3.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_4.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_5.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_6.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_7.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_8.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_9.png
+  - assets/images/shapegame/game_easy/shape_easy_balck_10.png
+
+
+  - assets/images/shapegame/game_hard/shape_hard_1.png
+  - assets/images/shapegame/game_hard/shape_hard_2.png
+  - assets/images/shapegame/game_hard/shape_hard_3.png
+  - assets/images/shapegame/game_hard/shape_hard_4.png
+  - assets/images/shapegame/game_hard/shape_hard_5.png
+  - assets/images/shapegame/game_hard/shape_hard_6.png
+  - assets/images/shapegame/game_hard/shape_hard_7.png
+  - assets/images/shapegame/game_hard/shape_hard_8.png
+  - assets/images/shapegame/game_hard/shape_hard_9.png
+  - assets/images/shapegame/game_hard/shape_hard_10.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_1.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_2.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_3.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_4.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_5.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_6.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_7.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_8.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_9.png
+  - assets/images/shapegame/game_hard/shape_hard_balck_10.png
 
   - assets/images/result/back.png
   - assets/images/result/character1.png
@@ -320,7 +421,45 @@ flutter:
   - assets/images/setting/sfx_icon.png
   - assets/images/setting/exit.png
 
+  
   - assets/music/background_music.mp3
+  - assets/soundeffect/touch_screen.mp3
+  - assets/soundeffect/three_stars.mp3
+  - assets/soundeffect/button_click.mp3
+  - assets/soundeffect/button_back.mp3
+  - assets/soundeffect/chapter_lock.mp3
+  - assets/soundeffect/cut_fruit.mp3
+  - assets/soundeffect/collect.mp3
+  - assets/soundeffect/openstickerbook.mp3
+  - assets/soundeffect/HintButtonSound.mp3
+  - assets/soundeffect/lineCorrectAnswer.mp3
+  - assets/soundeffect/drawingPopSound.mp3
+  - assets/soundeffect/lineHintButtonSound.mp3
+  - assets/soundeffect/selectLineSound.mp3
+  - assets/soundeffect/melonSeed.mp3
+  - assets/soundeffect/melonSeedPlace.mp3
+  - assets/soundeffect/closeHintButtonSound.mp3
+  - assets/soundeffect/drawingLineSound.mp3
+  - assets/soundeffect/countdownDotSound.mp3
+  - assets/soundeffect/clickDotSound.mp3
+  - assets/soundeffect/tickingClockSound.mp3
+  - assets/soundeffect/clickDice.mp3
+  - assets/soundeffect/dragDice.mp3
+  - assets/soundeffect/sentDiceAnswer.mp3
+  - assets/soundeffect/pasteDice.mp3
+  - assets/soundeffect/CuttingMelonSound.mp3
+  - assets/soundeffect/backMelonSeed.mp3
+  - assets/soundeffect/slideDownBar.mp3
+  - assets/soundeffect/slideUpBar.mp3
+  - assets/soundeffect/scrollScreenDoth.mp3
+  - assets/soundeffect/wrongDraw.mp3
+  - assets/soundeffect/correctAnswerQuizDot.mp3
+  - assets/soundeffect/worngAnswerQuizDot.mp3
+  - assets/soundeffect/quizWin.mp3
+  - assets/soundeffect/soundSettingButton.mp3
+  - assets/soundeffect/hitCorner1.mp3
+  - assets/soundeffect/hitCorner2.mp3
+
   - assets/music/click_sound.mp3
 
   #   - images/a_dot_ham.jpeg

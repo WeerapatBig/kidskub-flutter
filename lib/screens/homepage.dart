@@ -4,7 +4,7 @@ import 'package:firstly/screens/gameselectionpage.dart';
 import 'package:firstly/screens/strickerbook.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:firstly/function/gamesettingsdialog.dart';
+import 'package:firstly/widgets/gamesettingsdialog.dart';
 
 class FloatingAsset {
   Offset position;
@@ -64,7 +64,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    BackgroundAudioManager(); // สร้างอินสแตนซ์เพื่อเริ่มต้นเสียงเพลง
+    BackgroundAudioManager()
+        .playBackgroundMusic(); // สร้างอินสแตนซ์เพื่อเริ่มต้นเสียงเพลง
 
     // สร้างรายการของ Asset
     _assets = [
@@ -243,18 +244,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (asset.position.dx < -screenSize.width / 2) {
       asset.position = Offset(-screenSize.width / 2, asset.position.dy);
       asset.velocity = Offset(-asset.velocity.dx, asset.velocity.dy);
+      BackgroundAudioManager().playHitCorner1Sound();
     }
     if (asset.position.dx > screenSize.width / 2) {
       asset.position = Offset(screenSize.width / 2, asset.position.dy);
       asset.velocity = Offset(-asset.velocity.dx, asset.velocity.dy);
+      BackgroundAudioManager().playHitCorner1Sound();
     }
     if (asset.position.dy < -screenSize.height / 2) {
       asset.position = Offset(asset.position.dx, -screenSize.height / 2);
       asset.velocity = Offset(asset.velocity.dx, -asset.velocity.dy);
+      BackgroundAudioManager().playHitCorner1Sound();
     }
     if (asset.position.dy > screenSize.height / 2) {
       asset.position = Offset(asset.position.dx, screenSize.height / 2);
       asset.velocity = Offset(asset.velocity.dx, -asset.velocity.dy);
+      BackgroundAudioManager().playHitCorner1Sound();
     }
   }
 
@@ -274,202 +279,215 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _ticker.start();
     }
 
-    return Scaffold(
-      body: Container(
-        // เพิ่มภาพพื้นหลัง
-        decoration: widget.showHeader
-            ? const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/homepage/grid.png'),
-                  fit: BoxFit.cover,
-                ),
-              )
-            : null,
+    return GestureDetector(
+      onTap: () {
+        BackgroundAudioManager()
+            .playTouchScreenSound(); // เล่นเสียงเมื่อสัมผัสหน้าจอ
+      },
+      child: Scaffold(
+        body: Container(
+          // เพิ่มภาพพื้นหลัง
+          decoration: widget.showHeader
+              ? const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/homepage/grid.png'),
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : null,
 
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            if (widget.showMiddle)
-              // แสดง Asset ทั้งหมด (วางไว้ก่อนเนื้อหาหลัก)
-              ..._assets.map(
-                (asset) {
-                  return Positioned(
-                    left: (screenSize.width / 2) +
-                        asset.position.dx -
-                        asset.width / 2,
-                    top: (screenSize.height / 2) +
-                        asset.position.dy -
-                        asset.height / 2,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onPanStart: (_) {
-                        // ไม่ต้องหยุด Ticker แล้ว
-                        asset.isBeingDragged =
-                            true; // ตั้งค่าสถานะว่ากำลังถูกลาก
-                        asset.velocity = Offset.zero;
-                      },
-                      onPanUpdate: (details) {
-                        setState(() {
-                          asset.position += details.delta;
-                        });
-                      },
-                      onPanEnd: (details) {
-                        asset.isBeingDragged = false; // ปล่อยสถานะการลาก
-                        asset.velocity = details.velocity.pixelsPerSecond / 60;
-                        _limitVelocity(
-                            asset, 300); // กำหนดความเร็วสูงสุดที่ 300 หน่วย
-                        //_lastElapsed = Duration.zero; // รีเซ็ตเวลาเริ่มต้น
-                        // ไม่ต้องเริ่ม Ticker ใหม่
-                      },
-                      child: Image.asset(
-                        asset.imagePath,
-                        width: asset.width,
-                        height: asset.height,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              if (widget.showMiddle)
+                // แสดง Asset ทั้งหมด (วางไว้ก่อนเนื้อหาหลัก)
+                ..._assets.map(
+                  (asset) {
+                    return Positioned(
+                      left: (screenSize.width / 2) +
+                          asset.position.dx -
+                          asset.width / 2,
+                      top: (screenSize.height / 2) +
+                          asset.position.dy -
+                          asset.height / 2,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onPanStart: (_) {
+                          // ไม่ต้องหยุด Ticker แล้ว
+                          asset.isBeingDragged =
+                              true; // ตั้งค่าสถานะว่ากำลังถูกลาก
+                          asset.velocity = Offset.zero;
+                        },
+                        onPanUpdate: (details) {
+                          setState(() {
+                            asset.position += details.delta;
+                          });
+                        },
+                        onPanEnd: (details) {
+                          asset.isBeingDragged = false; // ปล่อยสถานะการลาก
+                          asset.velocity =
+                              details.velocity.pixelsPerSecond / 60;
+                          _limitVelocity(
+                              asset, 300); // กำหนดความเร็วสูงสุดที่ 300 หน่วย
+                          //_lastElapsed = Duration.zero; // รีเซ็ตเวลาเริ่มต้น
+                          // ไม่ต้องเริ่ม Ticker ใหม่
+                        },
+                        child: Image.asset(
+                          asset.imagePath,
+                          width: asset.width,
+                          height: asset.height,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            if (widget.showFooter)
-              // เนื้อหาหลัก
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // รูปภาพด้านบน
-                    SlideTransition(
-                      position: _imageSlideAnimation,
-                      child: Container(
-                        width: screenSize.width * 0.6,
-                        height: screenSize.height * 0.28,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'assets/images/homepage/kidskubhomepage.png'),
-                            fit: BoxFit.fitWidth,
+                    );
+                  },
+                ),
+              if (widget.showFooter)
+                // เนื้อหาหลัก
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // รูปภาพด้านบน
+                      SlideTransition(
+                        position: _imageSlideAnimation,
+                        child: Container(
+                          width: screenSize.width * 0.6,
+                          height: screenSize.height * 0.28,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/homepage/kidskubhomepage.png'),
+                              fit: BoxFit.fitWidth,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    SlideTransition(
-                      position: _rowSlideAnimation,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // ปุ่มแรก
-                          GestureDetector(
-                            onTap: () {
-                              _startAnimationSequence2();
-                            },
-                            onTapDown: (_) {
-                              setState(() {
-                                _scaleButton1 = 0.9;
-                              });
-                            },
-                            onTapUp: (_) {
-                              setState(() {
-                                _scaleButton1 = 1.0;
-                              });
-                            },
-                            onTapCancel: () {
-                              setState(() {
-                                _scaleButton1 = 1.0;
-                              });
-                            },
-                            child: AnimatedScale(
-                              scale: _scaleButton1,
-                              duration: _duration,
-                              child: Image.asset(
-                                'assets/images/homepage/strickerbook_button.png',
-                                width: screenSize.width * 0.15,
-                                height: screenSize.height * 0.25,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: screenSize.width * 0.005,
-                          ),
-                          // ปุ่มที่สอง
-                          GestureDetector(
-                            onTap: () {
-                              _startAnimationSequence();
-                            },
-                            onTapDown: (_) {
-                              setState(() {
-                                _scaleButton2 = 0.9;
-                              });
-                            },
-                            onTapUp: (_) {
-                              setState(() {
-                                _scaleButton2 = 1.0;
-                              });
-                            },
-                            onTapCancel: () {
-                              setState(() {
-                                _scaleButton2 = 1.0;
-                              });
-                            },
-                            child: AnimatedScale(
-                              scale: _scaleButton2,
-                              duration: _duration,
-                              child: Image.asset(
-                                'assets/images/homepage/buttonplay.png',
-                                width: screenSize.width * 0.15,
-                                height: screenSize.height * 0.25,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 50,
                       ),
-                    ),
-                  ],
+                      SlideTransition(
+                        position: _rowSlideAnimation,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // ปุ่มแรก
+                            GestureDetector(
+                              onTap: () {
+                                BackgroundAudioManager()
+                                    .playButtonClickSound(); // เล่นเสียงกดปุ่ม
+                                _startAnimationSequence2();
+                              },
+                              onTapDown: (_) {
+                                setState(() {
+                                  _scaleButton1 = 0.9;
+                                });
+                              },
+                              onTapUp: (_) {
+                                setState(() {
+                                  _scaleButton1 = 1.0;
+                                });
+                              },
+                              onTapCancel: () {
+                                setState(() {
+                                  _scaleButton1 = 1.0;
+                                });
+                              },
+                              child: AnimatedScale(
+                                scale: _scaleButton1,
+                                duration: _duration,
+                                child: Image.asset(
+                                  'assets/images/homepage/strickerbook_button.png',
+                                  width: screenSize.width * 0.15,
+                                  height: screenSize.height * 0.25,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: screenSize.width * 0.005,
+                            ),
+                            // ปุ่มที่สอง
+                            GestureDetector(
+                              onTap: () {
+                                BackgroundAudioManager()
+                                    .playButtonClickSound(); // เล่นเสียงกดปุ่ม
+                                _startAnimationSequence();
+                              },
+                              onTapDown: (_) {
+                                setState(() {
+                                  _scaleButton2 = 0.9;
+                                });
+                              },
+                              onTapUp: (_) {
+                                setState(() {
+                                  _scaleButton2 = 1.0;
+                                });
+                              },
+                              onTapCancel: () {
+                                setState(() {
+                                  _scaleButton2 = 1.0;
+                                });
+                              },
+                              child: AnimatedScale(
+                                scale: _scaleButton2,
+                                duration: _duration,
+                                child: Image.asset(
+                                  'assets/images/homepage/buttonplay.png',
+                                  width: screenSize.width * 0.15,
+                                  height: screenSize.height * 0.25,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            if (widget.showButton)
-              Positioned(
-                top: screenSize.height * 0.04,
-                right: screenSize.width * 0.02,
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const GameSettingsDialog();
-                      },
-                    );
-                  },
-                  onTapDown: (_) {
-                    setState(() {
-                      _scaleButton3 = 0.9;
-                    });
-                  },
-                  onTapUp: (_) {
-                    setState(() {
-                      _scaleButton3 = 1.0;
-                    });
-                  },
-                  onTapCancel: () {
-                    setState(() {
-                      _scaleButton3 = 1.0;
-                    });
-                  },
-                  child: AnimatedScale(
-                    scale: _scaleButton3,
-                    duration: _duration,
-                    child: Image.asset(
-                      'assets/images/homepage/setting_button.png',
-                      width: screenSize.width * 0.09,
-                      height: screenSize.height * 0.12,
+              if (widget.showButton)
+                Positioned(
+                  top: screenSize.height * 0.04,
+                  right: screenSize.width * 0.02,
+                  child: GestureDetector(
+                    onTap: () {
+                      BackgroundAudioManager()
+                          .playButtonClickSound(); // เล่นเสียงกดปุ่ม
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const GameSettingsDialog();
+                        },
+                      );
+                    },
+                    onTapDown: (_) {
+                      setState(() {
+                        _scaleButton3 = 0.9;
+                      });
+                    },
+                    onTapUp: (_) {
+                      setState(() {
+                        _scaleButton3 = 1.0;
+                      });
+                    },
+                    onTapCancel: () {
+                      setState(() {
+                        _scaleButton3 = 1.0;
+                      });
+                    },
+                    child: AnimatedScale(
+                      scale: _scaleButton3,
+                      duration: _duration,
+                      child: Image.asset(
+                        'assets/images/homepage/setting_button.png',
+                        width: screenSize.width * 0.09,
+                        height: screenSize.height * 0.12,
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
