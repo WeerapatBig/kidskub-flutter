@@ -12,7 +12,6 @@ import 'data/level_easy_data.dart';
 import 'model/level_shape_data.dart';
 import 'model/shape_model.dart';
 import 'model/silhouette_item.dart';
-import 'screen_game_shape_hard.dart';
 
 enum ButtonState { none, correct, incorrect }
 
@@ -625,13 +624,7 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
                 });
               },
               onButton2Pressed: () {
-                Navigator.push<void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const GameShapeHardScreen(),
-                  ),
-                );
+                Navigator.pop(context);
               },
             ),
           if (showResult && !isWin)

@@ -2,13 +2,15 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:firstly/widgets/showkey.dart';
 import 'package:firstly/widgets/showsticker.dart';
-import 'package:firstly/screens_chapter1/motionlevel1.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:firstly/screens_chapter2/line_game_hard_screen.dart';
 import 'package:firstly/screens_chapter2/line_game_quiz.dart';
-import 'package:firstly/screens_chapter2/line_game_test.dart';
+import 'package:firstly/screens_chapter2/line_game_easy.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
+
+import '../function/pulse_effect.dart';
+import '../screens_chapter2/line_game_motion.dart';
 
 class LineGameList extends StatefulWidget {
   const LineGameList({super.key});
@@ -179,7 +181,7 @@ class _LineGameListState extends State<LineGameList>
   }
 
   List<Widget> _buildFloatingImages(BuildContext context) {
-    double floatingImageSize = MediaQuery.of(context).size.width * 0.15;
+    double floatingImageSize = MediaQuery.of(context).size.width * 0.25;
     return List.generate(4, (index) {
       return FloatingImage(
         imagePath: 'assets/images/line.png',
@@ -332,7 +334,7 @@ class _LineGameListState extends State<LineGameList>
         result = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MotionLevel1(),
+            builder: (context) => LineGameMotion(),
           ),
         );
         // ดีบัคเพื่อดูค่าที่ได้รับจาก MotionLevel1
@@ -376,10 +378,7 @@ class _LineGameListState extends State<LineGameList>
         result = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DrawLineGameScreen(
-              starColor: level['starColor'],
-              earnedStars: level['earnedStars'],
-            ),
+            builder: (context) => DrawLineGameScreen(),
           ),
         );
 
@@ -730,6 +729,7 @@ class FloatingImage extends StatefulWidget {
 class _FloatingImageState extends State<FloatingImage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late Animation<double> _rotationAnimation;
   late double _startX;
   late double _startY;
   late double _dx;
@@ -745,6 +745,19 @@ class _FloatingImageState extends State<FloatingImage>
       duration: Duration(seconds: 50 + _random.nextInt(10)),
       vsync: this,
     )..repeat();
+
+    // เพิ่มการหมุนแบบเร็วขึ้น
+    int rotationSpeed = 8 + _random.nextInt(5); // หมุนใน 8 - 12 วินาทีต่อรอบ
+    double rotationCurveEnd =
+        (_controller.duration!.inSeconds / rotationSpeed.toDouble())
+            .clamp(0.0, 1.0);
+
+    _rotationAnimation = Tween<double>(begin: 0, end: 2 * pi).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(0.0, rotationCurveEnd, curve: Curves.linear),
+      ),
+    );
 
     _startX = _random.nextDouble() * 2 * pi;
     _startY = _random.nextDouble() * 2 * pi;
@@ -776,10 +789,13 @@ class _FloatingImageState extends State<FloatingImage>
         return Positioned(
           left: posX,
           top: posY,
-          child: SizedBox(
-            width: widget.width,
-            height: widget.height,
-            child: child!,
+          child: Transform.rotate(
+            angle: _rotationAnimation.value,
+            child: SizedBox(
+              width: widget.width,
+              height: widget.height,
+              child: child!,
+            ),
           ),
         );
       },
@@ -858,78 +874,6 @@ class _CharacterAnimationState extends State<CharacterAnimation>
               widget.imagePath,
               width: characterSize,
               height: characterSize,
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class PulseEffect extends StatefulWidget {
-  final double size;
-  final Color color;
-  final Offset position;
-
-  const PulseEffect({
-    Key? key,
-    required this.size,
-    required this.color,
-    required this.position,
-  }) : super(key: key);
-
-  @override
-  _PulseEffectState createState() => _PulseEffectState();
-}
-
-class _PulseEffectState extends State<PulseEffect>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    _animation = Tween<double>(begin: 0.5, end: 0.6).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: widget.position,
-          child: Transform.scale(
-            scale: _animation.value,
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 50, 0),
-              width: widget.size,
-              height: widget.size,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: widget.color,
-                  boxShadow: [
-                    BoxShadow(
-                      color: widget.color.withOpacity(0.5),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                      offset: const Offset(0, 0),
-                    )
-                  ]),
             ),
           ),
         );

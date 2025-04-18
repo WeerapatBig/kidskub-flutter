@@ -250,7 +250,7 @@ class _ResultWidgetState extends State<ResultWidget>
                         height: screenHeight * 0.24,
                         onPressed: widget.onButton2Pressed,
                         imageAsset: widget.onLevelComplete
-                            ? 'assets/images/result/next.png'
+                            ? 'assets/images/result/next_yellow.png'
                             : 'assets/images/result/playagain.png',
                       ),
                     ],

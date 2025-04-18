@@ -49,6 +49,8 @@ dependencies:
   flame_forge2d: ^0.18.2+3
   flame_kenney_xml: ^0.1.1+3
   xml: ^6.5.0
+  collection: ^1.19.0
+  lottie: ^3.3.0
 
 dev_dependencies:
   flutter_test:
@@ -101,6 +103,20 @@ flutter:
   - assets/images/strickerbook/receivedbutton.png
   - assets/images/strickerbook/receivedkey.png
   - assets/images/strickerbook/elmstk.png
+
+  - assets/images/game_list/star_purple_reward.png
+  - assets/images/game_list/star_yellow_reward.png
+  - assets/images/game_list/total_purple_0.png
+  - assets/images/game_list/total_purple_1.png
+  - assets/images/game_list/total_yellow_0.png
+  - assets/images/game_list/total_yellow_1.png
+  - assets/images/game_list/total_yellow_2.png
+  - assets/images/game_list/total_yellow_3.png
+  - assets/images/game_list/total_yellow_4.png
+  - assets/images/game_list/total_yellow_5.png
+  - assets/images/game_list/warning_unlock_dot.png
+  - assets/images/game_list/warning_unlock_line.png
+  - assets/images/game_list/warning_unlock_shape.png
 
   - assets/images/strickerbook/book1_left.png
   - assets/images/strickerbook/book1_right.png
@@ -175,12 +191,10 @@ flutter:
   - assets/images/dotchapter/chractor1.png
   - assets/images/dotchapter/bg.png
   - assets/images/dotchapter/elm.png
-  - assets/images/dotchapter/lv1_card_lock.png
+  - assets/images/dotchapter/card_lock.png
   - assets/images/dotchapter/lv1_card_unlock.png
-  - assets/images/dotchapter/lv2_card_lock.png
   - assets/images/dotchapter/lv2_card_unlock.png
   - assets/images/dotchapter/motion_card.png
-  - assets/images/dotchapter/quiz_card_lock.png
   - assets/images/dotchapter/quiz_card_unlock.png
   - assets/images/dotchapter/card3_level.png
   - assets/images/dotchapter/card1_level.png
@@ -329,6 +343,17 @@ flutter:
   - assets/images/shapegame/grid_green.png
   - assets/images/shapegame/check.png
   - assets/images/shapegame/cross.png
+  - assets/images/shapegame/card_lock.png
+  - assets/images/shapegame/charactor_shape.png
+  - assets/images/shapegame/lv1_card_unlock.png
+  - assets/images/shapegame/lv2_card_unlock.png
+  - assets/images/shapegame/card_comic.png
+  - assets/images/shapegame/quiz_card_unlock.png
+  - assets/images/shapegame/elm_1.png
+  - assets/images/shapegame/elm_2.png
+  - assets/images/shapegame/elm_3.png
+  - assets/images/shapegame/elm_4.png
+
   - assets/images/shapegame/game_easy/shape_easy_1.png
   - assets/images/shapegame/game_easy/shape_easy_2.png
   - assets/images/shapegame/game_easy/shape_easy_3.png
@@ -372,12 +397,98 @@ flutter:
   - assets/images/shapegame/game_hard/shape_hard_balck_9.png
   - assets/images/shapegame/game_hard/shape_hard_balck_10.png
 
+  - assets/images/shapegame/quiz_shape/level1/choice_bar_1.png
+  - assets/images/shapegame/quiz_shape/level1/isSnap_1_1.png
+  - assets/images/shapegame/quiz_shape/level1/isSnap_1_2.png
+  - assets/images/shapegame/quiz_shape/level1/option_1_1.png
+  - assets/images/shapegame/quiz_shape/level1/option_1_2.png 
+  - assets/images/shapegame/quiz_shape/level2/choice_bar_2.png
+  - assets/images/shapegame/quiz_shape/level2/isSnap_2_1.png
+  - assets/images/shapegame/quiz_shape/level2/isSnap_2_2.png
+  - assets/images/shapegame/quiz_shape/level2/isSnap_2_2_1.png
+  - assets/images/shapegame/quiz_shape/level2/isSnap_2_3.png
+  - assets/images/shapegame/quiz_shape/level2/isSnap_2_3_2.png
+  - assets/images/shapegame/quiz_shape/level2/isSnap_2_4.png
+  - assets/images/shapegame/quiz_shape/level2/option_2_1.png
+  - assets/images/shapegame/quiz_shape/level2/option_2_2.png
+  - assets/images/shapegame/quiz_shape/level2/option_2_3.png
+  - assets/images/shapegame/quiz_shape/level2/option_2_4.png
+  - assets/images/shapegame/quiz_shape/level3/choice_bar_3.png
+  - assets/images/shapegame/quiz_shape/level3/isSnap_3_1.png
+  - assets/images/shapegame/quiz_shape/level3/isSnap_3_2.png
+  - assets/images/shapegame/quiz_shape/level3/isSnap_3_3.png
+  - assets/images/shapegame/quiz_shape/level3/isSnap_3_4.png
+  - assets/images/shapegame/quiz_shape/level3/isSnap_3_5.png
+  - assets/images/shapegame/quiz_shape/level3/option_3_1.png
+  - assets/images/shapegame/quiz_shape/level3/option_3_2.png
+  - assets/images/shapegame/quiz_shape/level3/option_3_3.png
+  - assets/images/shapegame/quiz_shape/level3/option_3_4.png
+  - assets/images/shapegame/quiz_shape/level4/choice_bar_4.png
+  - assets/images/shapegame/quiz_shape/level4/isSnap_4_1.png
+  - assets/images/shapegame/quiz_shape/level4/isSnap_4_2.png
+  - assets/images/shapegame/quiz_shape/level4/isSnap_4_3.png
+  - assets/images/shapegame/quiz_shape/level4/isSnap_4_4.png
+  - assets/images/shapegame/quiz_shape/level4/isSnap_4_5.png
+  - assets/images/shapegame/quiz_shape/level4/option_4_1.png
+  - assets/images/shapegame/quiz_shape/level4/option_4_2.png
+  - assets/images/shapegame/quiz_shape/level4/option_4_3.png
+  - assets/images/shapegame/quiz_shape/level4/option_4_4.png
+  - assets/images/shapegame/quiz_shape/level4/option_4_5.png
+  - assets/images/shapegame/quiz_shape/silhouette_1.png
+  - assets/images/shapegame/quiz_shape/silhouette_2.png
+  - assets/images/shapegame/quiz_shape/silhouette_3.png
+  - assets/images/shapegame/quiz_shape/silhouette_4.png
+
+  - assets/images/colorgame/grid_bg_color.png
+  - assets/images/colorgame/countdown.gif
+  - assets/images/colorgame/X.png
+  - assets/images/colorgame/color_game_star_empty.png
+  - assets/images/colorgame/color_game_star_full.png
+  - assets/images/colorgame/time_alert_2.png
+  - assets/images/colorgame/time_alert_1.png
+  - assets/images/colorgame/popup_enemy.png
+  - assets/images/colorgame/character/is_eat.png
+  - assets/images/colorgame/character/is_idle.png
+  - assets/images/colorgame/character/wrongColor_sheet.png
+  - assets/images/colorgame/character/correctColor_sheet.png
+  - assets/images/colorgame/character/is_eat_wrong.png
+  - assets/images/colorgame/character/enemy.png
+  - assets/images/colorgame/controller/arrow_left.png
+  - assets/images/colorgame/controller/arrow_right.png
+  - assets/images/colorgame/controller/arrow_up.png
+  - assets/images/colorgame/controller/arrow_down.png
+  - assets/images/colorgame/controller/arrow_down_hover.png
+  - assets/images/colorgame/controller/arrow_left_hover.png
+  - assets/images/colorgame/controller/arrow_right_hover.png
+  - assets/images/colorgame/controller/arrow_up_hover.png
+
+  - assets/images/colorgame/quiz_color/colors_wheel/empty_color_1.png
+  - assets/images/colorgame/quiz_color/colors_wheel/empty_color_2.png
+  - assets/images/colorgame/quiz_color/colors_wheel/empty_color_3.png
+  - assets/images/colorgame/quiz_color/colors_wheel/primary_blue_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/primary_red_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/primary_yellow_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/secondary_green_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/secondary_orange_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/secondary_purple_color.png
+  
+  - assets/images/colorgame/quiz_color/dialog/dialogs_1.png
+  - assets/images/colorgame/quiz_color/dialog/dialogs_2.png
+  - assets/images/colorgame/quiz_color/dialog/dialogs_3.png
+  - assets/images/colorgame/quiz_color/dialog/dialogs_4.png
+  - assets/images/colorgame/quiz_color/dialog/dialogs_5.png
+  - assets/images/colorgame/quiz_color/dialog/dialogs_6.png
+  - assets/images/colorgame/quiz_color/dialog/dialogs_7.png
+  - assets/images/colorgame/quiz_color/dialog/character_red.png
+  
   - assets/images/result/back.png
+  - assets/images/result/exit.png
+  - assets/images/result/replay_yellow.png
   - assets/images/result/character1.png
   - assets/images/result/character2.png
   - assets/images/result/light1.png
   - assets/images/result/light2.png
-  - assets/images/result/next.png
+  - assets/images/result/next_yellow.png
   - assets/images/result/overlay_black.png
   - assets/images/result/playagain.png
   - assets/images/result/playagain2.png
@@ -393,6 +504,14 @@ flutter:
   - assets/images/result/playagain_purple.png
   - assets/images/result/light_purple.png
   - assets/images/result/star_purple0.png
+  - assets/images/result/gif_anim_result/dot_chapter_result/0_stars_nd.gif
+  - assets/images/result/gif_anim_result/dot_chapter_result/0_stars_st.gif
+  - assets/images/result/gif_anim_result/dot_chapter_result/1_stars_nd.gif
+  - assets/images/result/gif_anim_result/dot_chapter_result/1_stars_st.gif
+  - assets/images/result/gif_anim_result/dot_chapter_result/2_stars_nd.gif
+  - assets/images/result/gif_anim_result/dot_chapter_result/2_stars_st.gif
+  - assets/images/result/gif_anim_result/dot_chapter_result/3_stars_nd.gif
+  - assets/images/result/gif_anim_result/dot_chapter_result/3_stars_st.gif
   
   - assets/images/Hint3.png
   - assets/images/Hint4.png
@@ -413,6 +532,12 @@ flutter:
   - assets/motion/Scene6.mp4
   - assets/motion/Scene7.mp4
   - assets/motion/Scene8.mp4
+
+  - assets/motion/lineComp_1.mp4
+  - assets/motion/lineComp_2.mp4
+  - assets/motion/lineComp_3.mp4
+  - assets/motion/lineComp_4.mp4
+  - assets/motion/lineComp_5.mp4
 
   - assets/images/setting/bar.png
   - assets/images/setting/button_minus.png
@@ -461,6 +586,10 @@ flutter:
   - assets/soundeffect/hitCorner2.mp3
 
   - assets/music/click_sound.mp3
+  - assets/lottie/Yellow_2_Stars_Score_Anim.json
+  - assets/lottie/Yellow_3_Stars_Score_Anim.json
+  - assets/lottie/Yellow_0_Stars_Score_Anim.json
+  - assets/lottie/Yellow_1_Stars_Score_Anim.json
 
   #   - images/a_dot_ham.jpeg
 
@@ -475,17 +604,16 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  - assets/fonts/
+  fonts:
+     - family: Kodchasan
+       fonts:
+         - asset: assets/fonts/Kodchasan-Light.ttf
+         - asset: assets/fonts/Kodchasan-Medium.ttf
+         - asset: assets/fonts/Kodchasan-Regular.ttf
+         - asset: assets/fonts/Kodchasan-SemiBold.ttf
+         - asset: assets/fonts/Kodchasan-Bold.ttf
+           weight: 700
+  
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

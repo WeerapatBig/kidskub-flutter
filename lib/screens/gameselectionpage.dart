@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:firstly/screens/colorgamelist.dart';
-import 'package:firstly/screens/dotgamelist.dart';
 import 'package:firstly/screens/homepage.dart';
-import 'package:firstly/screens/linegamelist.dart';
+import 'package:firstly/screens/list_game_page/list_game_dot_screen.dart';
+import 'package:firstly/screens/list_game_page/list_game_line_screen.dart';
 import 'package:firstly/screens/shapegamelist.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,8 +23,8 @@ class _GameSelectionPageState extends State<GameSelectionPage>
   // ตัวแปรสถานะของกุญแจที่ผู้เล่นมีสำหรับแต่ละด่าน
   bool hasKey1 = true; //ลบ
   bool hasKey2 = true;
-  bool hasKey3 = false;
-  bool hasKey4 = false;
+  bool hasKey3 = true;
+  bool hasKey4 = true;
 
   bool isShowingPopup = false;
 
@@ -84,7 +84,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
     _loadKeyStatus(); // โหลดสถานะกุญแจ
 
     // กำหนดสถานะการปลดล็อกของแต่ละด่าน
-    levelUnlocked = [true, true, false, false];
+    levelUnlocked = [true, true, true, true];
 
     // สร้าง AnimationController สำหรับแต่ละด่าน
     lockShakeControllers = List.generate(gameImages.length, (index) {
@@ -168,6 +168,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
               // หากคุณต้องการจัดการสถานะการเปลี่ยนแปลงเพจ ให้ตรวจสอบว่าไม่เปลี่ยนสถานะที่เกี่ยวข้องกับ UI ที่กำลังถูกวาด
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
+                  _loadKeyStatus(); // <-- เพิ่มตรงนี้!
                   // ปรับสถานะที่ต้องการหลังจากหน้าต่าง UI วาดเสร็จ
                 });
               });
@@ -329,7 +330,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
           context,
           PageRouteBuilder(
             pageBuilder: (_, __, ___) =>
-                const DotGameList(), // เปลี่ยนไปยังหน้าใหม่
+                const ListGameDotScreen(), // เปลี่ยนไปยังหน้าใหม่
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               const begin = Offset(0.0, -1.0);
@@ -364,7 +365,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LineGameList(),
+            builder: (context) => const ListGameLineScreen(),
           ),
         );
         break;

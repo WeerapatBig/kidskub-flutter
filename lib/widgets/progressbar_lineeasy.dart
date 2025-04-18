@@ -5,7 +5,7 @@ class ProgressBarLineEasyWidget extends StatelessWidget {
   final int maxTime; // เวลาสูงสุด
   final int starCount; // จำนวนดาว (สามารถคำนวณได้)
 
-  ProgressBarLineEasyWidget({
+  const ProgressBarLineEasyWidget({
     Key? key,
     required this.remainingTime,
     required this.maxTime,

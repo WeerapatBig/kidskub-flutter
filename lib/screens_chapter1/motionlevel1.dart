@@ -1,5 +1,8 @@
+import 'package:firstly/function/background_audio_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+
+import '../screens/shared_prefs_service.dart';
 
 class MotionLevel1 extends StatefulWidget {
   @override
@@ -8,14 +11,18 @@ class MotionLevel1 extends StatefulWidget {
 
 class _MotionLevel1State extends State<MotionLevel1>
     with TickerProviderStateMixin {
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controller; // เปลี่ยนเป็น nullable เพื่อป้องกัน error
   late AnimationController _textAnimationController;
   late Animation<double> _textScaleAnimation;
   late AnimationController _buttonAnimationController;
   late Animation<double> _buttonScaleAnimation;
 
-  bool _showButton = false; // ตัวแปรควบคุมการแสดงปุ่ม
-  int _currentVideoIndex = 0; // เก็บลำดับของวิดีโอที่กำลังเล่น
+  final prefsService = SharedPrefsService();
+
+  bool _isProcessingTap = false;
+  bool _showNextText = false;
+  bool _showButton = false;
+  int _currentVideoIndex = 0;
   final List<String> _videoPaths = [
     'assets/motion/Scene1.mp4',
     'assets/motion/Scene2.mp4',
@@ -26,90 +33,136 @@ class _MotionLevel1State extends State<MotionLevel1>
     'assets/motion/Scene7.mp4',
     'assets/motion/Scene8.mp4',
   ];
-  bool _showNextText = false; // ควบคุมการแสดงข้อความ "แตะเพื่อไปต่อ"
 
   @override
   void initState() {
     super.initState();
+    _initializeAnimations();
+    _initializeAndPlayVideo();
+  }
 
-    // ตั้งค่า AnimationController สำหรับข้อความ "แตะเพื่อไปต่อ"
+  void _initializeAnimations() {
     _textAnimationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
     )..repeat(reverse: true);
 
-    _textScaleAnimation =
-        Tween<double>(begin: 1.0, end: 1.2).animate(CurvedAnimation(
-      parent: _textAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    _textScaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _textAnimationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
-    // ตั้งค่า AnimationController สำหรับอนิเมชันหดขยายของปุ่ม
     _buttonAnimationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _buttonScaleAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: _buttonAnimationController,
-      curve: Curves.elasticOut,
-    ));
-
-    _initializeAndPlayVideo();
+    _buttonScaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _buttonAnimationController,
+        curve: Curves.elasticOut,
+      ),
+    );
   }
 
-  void _initializeAndPlayVideo() {
-    // กำหนด VideoPlayerController ใหม่ตามไฟล์วิดีโอ
+  void _initializeAndPlayVideo() async {
+    if (_currentVideoIndex >= _videoPaths.length) {
+      _onLastVideoEnd();
+      return;
+    }
+
+    // กำจัด controller เก่าถ้ามี
+    if (_controller != null) {
+      await _controller!.dispose();
+    }
+
+    // สร้าง controller ใหม่
     _controller = VideoPlayerController.asset(_videoPaths[_currentVideoIndex])
       ..initialize().then((_) {
-        setState(() {
-          _controller.play();
-          _showNextText =
-              false; // ซ่อนข้อความ "แตะเพื่อไปต่อ" ระหว่างเล่นวิดีโอ
-        });
+        if (mounted) {
+          setState(() {
+            _showNextText = false;
+          });
+          _controller!.setVolume(1.0);
+          _controller!.play();
+        }
       });
 
-    // เพิ่ม Listener เพื่อตรวจสอบเมื่อวิดีโอเล่นจบ
-    _controller.addListener(() {
-      if (_controller.value.position == _controller.value.duration) {
-        if (_currentVideoIndex < _videoPaths.length - 1) {
-          // ถ้ายังไม่ใช่วิดีโอสุดท้าย ให้แสดงข้อความ "แตะเพื่อไปต่อ"
-          setState(() {
-            _showNextText = true;
-          });
-        } else {
-          // ถ้าเป็นวิดีโอสุดท้าย
-          _onLastVideoEnd();
+    _controller!.addListener(() {
+      if (mounted && _controller!.value.isInitialized) {
+        if (_controller!.value.position >= _controller!.value.duration) {
+          if (mounted) {
+            setState(() {
+              _showNextText = true;
+            });
+          }
         }
       }
     });
   }
 
+  void _onScreenTap() async {
+    if (_isProcessingTap || !_showNextText) return;
+
+    _isProcessingTap = true;
+    await _playNextVideo();
+    _isProcessingTap = false;
+  }
+
+  Future<void> _playNextVideo() async {
+    if (_currentVideoIndex < _videoPaths.length - 1) {
+      await _controller?.pause(); // หยุดวิดีโอปัจจุบัน
+      VideoPlayerController? oldController = _controller;
+
+      await oldController?.dispose(); // กำจัด controller เก่า
+      setState(() {
+        _currentVideoIndex++;
+        _showNextText = false;
+      });
+
+      await Future.delayed(Duration(milliseconds: 200)); // ให้เวลา dispose
+      _initializeAndPlayVideo();
+    } else {
+      _onLastVideoEnd();
+    }
+  }
+
   void _onLastVideoEnd() {
     setState(() {
-      _showButton = true; // แสดงปุ่ม
+      _showButton = true;
+      _showNextText = false;
     });
-    _buttonAnimationController.forward(); // เริ่มอนิเมชันหดขยายของปุ่ม
+    _buttonAnimationController.forward();
   }
 
-  void _playNextVideo() {
-    setState(() {
-      _currentVideoIndex++;
-      _controller.dispose(); // ลบ Controller เก่า
-      _initializeAndPlayVideo(); // เริ่มเล่นวิดีโอถัดไป
-    });
-  }
+  void _onButtonPressed() async {
+    // สมมติให้ Motion ได้ 0 ดาว และไม่มีสี (เพราะเป็นเลเวลแนะนำ)
+    await prefsService.saveLevelData('Dot Motion', 0, '', true);
 
-  void _onButtonPressed() {
-    Navigator.pop(context, {
-      'earnedStars': 0, // ตัวอย่าง: ส่งจำนวนดาวที่ได้รับกลับไป
-      'starColor': '' // ตัวอย่าง: ส่งสีของดาวกลับไป
-    });
+    // ปลดล็อคด่านถัดไป (Dot Easy)
+    await prefsService.updateLevelUnlockStatus('Dot Motion', 'Dot Easy');
+
+    // Debug เช็คว่าข้อมูลถูกบันทึกหรือไม่
+    final motionData = await prefsService.loadLevelData('Dot Motion');
+    final easyData = await prefsService.loadLevelData('Dot Easy');
+    print('Motion Data: $motionData');
+    print('Easy Data: $easyData');
+
+    print(
+        "Pop from DotMotion -> route is: ${ModalRoute.of(context)?.settings.name}");
+    Navigator.pop(context);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _textAnimationController.dispose();
-    _buttonAnimationController.dispose();
+    if (_controller != null && _controller!.value.isInitialized) {
+      _controller!.dispose();
+    }
+    if (_textAnimationController.isAnimating) {
+      _textAnimationController.dispose();
+    }
+    if (_buttonAnimationController.isAnimating) {
+      _buttonAnimationController.dispose();
+    }
     super.dispose();
   }
 
@@ -117,26 +170,25 @@ class _MotionLevel1State extends State<MotionLevel1>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // วิดีโอที่แสดงเต็มหน้าจอ
           LayoutBuilder(
             builder: (context, constraints) {
               return SizedBox(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
-                child: _controller.value.isInitialized
+                child: _controller != null && _controller!.value.isInitialized
                     ? AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
+                        aspectRatio: _controller!.value.aspectRatio,
+                        child: VideoPlayer(_controller!),
                       )
                     : const Center(child: CircularProgressIndicator()),
               );
             },
           ),
-          // แสดงข้อความ "แตะเพื่อไปต่อ" ระหว่างวิดีโอ
           if (_showNextText)
             Positioned(
               bottom: screenHeight * 0.1,
@@ -154,15 +206,14 @@ class _MotionLevel1State extends State<MotionLevel1>
               ),
             ),
           GestureDetector(
-            behavior: HitTestBehavior
-                .opaque, // ทำให้ GestureDetector ตรวจจับการกดทั่วพื้นที่
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               if (_showNextText) {
-                _playNextVideo(); // ให้กดที่ส่วนไหนของหน้าจอก็ได้
+                BackgroundAudioManager().playButtonClickSound();
+                _onScreenTap();
               }
             },
           ),
-          // แสดงปุ่ม Floating เมื่อเป็นวิดีโอสุดท้าย
           if (_showButton)
             Center(
               child: ScaleTransition(

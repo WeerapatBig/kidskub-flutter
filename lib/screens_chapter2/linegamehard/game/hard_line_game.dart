@@ -57,7 +57,7 @@ class HardLineGame extends FlameGame
 
   static const int backgroundPriority = -1;
   static const int elementPriority = 0;
-  static const int playerPriority = 3;
+  static const int playerPriority = 4;
   static const int obstraclePriority = 1;
   static const int trianglePriority = 2;
   static const int starPriority = 1;
@@ -576,6 +576,7 @@ class HardLineGame extends FlameGame
       final newLine = LineInWorld(
         startPos: pivotPos,
         endPos: pivotPos,
+        priority: 3,
       );
 
       // เสริม: ถ้าต้องการเลเยอร์ z-index (priority)
