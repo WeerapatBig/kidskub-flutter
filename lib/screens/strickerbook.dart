@@ -267,6 +267,16 @@ class BookSideWidget extends StatelessWidget {
 }
 
 class StickerBookPrefsService {
+  static Future<bool> loadIsCollected(String? stickerKey) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(stickerKey ?? '') ?? false;
+  }
+
+  // static Future<void> saveIsCollected(String? stickerKey, bool isCollected) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setBool(stickerKey ?? '', isCollected);
+  // }
+
   Future<void> clearAllPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // ล้างข้อมูลทั้งหมดใน SharedPreferences

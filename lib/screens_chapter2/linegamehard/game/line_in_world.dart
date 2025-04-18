@@ -31,6 +31,7 @@ class LineInWorld extends PositionComponent {
   LineInWorld({
     required Offset startPos,
     required Offset endPos,
+    required super.priority,
   })  : start = startPos,
         end = endPos,
         super(

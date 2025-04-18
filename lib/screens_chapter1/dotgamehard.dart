@@ -4,6 +4,7 @@ import 'package:firstly/function/background_audio_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 
+import '../screens/shared_prefs_service.dart';
 import '../widgets/progressbar_dothard.dart';
 import '../widgets/result_widget.dart';
 
@@ -16,12 +17,8 @@ class Dot {
 }
 
 class DotGameHard extends StatefulWidget {
-  final String starColor;
-  final int earnedStars;
   const DotGameHard({
     super.key,
-    required this.starColor,
-    required this.earnedStars,
   });
 
   @override
@@ -30,6 +27,7 @@ class DotGameHard extends StatefulWidget {
 
 class _DotGameHardState extends State<DotGameHard>
     with TickerProviderStateMixin {
+  final prefsService = SharedPrefsService();
   int timeLeft = 180;
   bool showResult = false;
   bool isWin = false;
@@ -180,6 +178,21 @@ class _DotGameHardState extends State<DotGameHard>
     _transformationController.dispose();
     BackgroundAudioManager().stopAllSounds();
     super.dispose();
+  }
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Dot Hard', starCount, 'yellow', true);
+
+// ปลดล็อคด่านถัดไป
+    await prefsService.updateLevelUnlockStatus('Dot Hard', 'Dot Quiz');
+
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Dot Hard');
+    print("Saved Level Data: $result");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
   }
 
   void _checkScrollEdges() {
@@ -594,11 +607,7 @@ class _DotGameHardState extends State<DotGameHard>
                 });
               },
               onButton2Pressed: () {
-                // กดปุ่มไปต่อ
-                Navigator.pop(context, {
-                  'earnedStars': starCount,
-                  'starColor': 'yellow',
-                });
+                _finishGame();
               },
             ),
           if (!isWin && showResult)
@@ -606,10 +615,7 @@ class _DotGameHardState extends State<DotGameHard>
               onLevelComplete: isWin,
               starsEarned: starCount,
               onButton1Pressed: () {
-                // กดปุ่มไปต่อ
-                Navigator.pop(
-                  context,
-                );
+                _finishGame();
               },
               onButton2Pressed: () {
                 setState(() {

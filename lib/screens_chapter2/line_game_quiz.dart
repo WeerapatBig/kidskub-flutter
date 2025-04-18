@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../screens/shared_prefs_service.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/result_widget_quiz.dart';
 
 class QuizLineGame extends StatefulWidget {
+  const QuizLineGame({super.key});
+
   @override
   _QuizLineGameState createState() => _QuizLineGameState();
 }
 
 class _QuizLineGameState extends State<QuizLineGame> {
+  final prefsService = SharedPrefsService();
   int currentLevel = 1;
   int hp = 3;
 
@@ -69,6 +73,19 @@ class _QuizLineGameState extends State<QuizLineGame> {
   void initState() {
     super.initState();
     showTutorial = true;
+  }
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Line Quiz', 1, 'purple', true);
+
+    await prefsService.updateLevelUnlockStatus('Line Quiz', 'Shape Motion');
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Line Quiz');
+    print("Saved Level Data: $result");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
   }
 
   /// เริ่มลาก (onPanStart)
@@ -466,11 +483,7 @@ class _QuizLineGameState extends State<QuizLineGame> {
                   });
                 },
                 onButton2Pressed: () {
-                  // กดปุ่ม “ไปต่อ”
-                  Navigator.pop(context, {
-                    'earnedStars': 1,
-                    'starColor': 'purple',
-                  });
+                  _finishGame();
                 },
               ),
 

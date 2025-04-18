@@ -2,8 +2,9 @@ import 'package:firstly/screens_chapter2/linegamehard/game/hard_line_game.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/shared_prefs_service.dart';
 import '../widgets/result_widget.dart';
-import 'line_game_test.dart';
+import 'line_game_easy.dart';
 
 /// ------------------------------------------------------------
 ///
@@ -30,6 +31,7 @@ class _LineGameHardScreenState extends State<LineGameHardScreen> {
   bool showResult = false;
   bool isWin = false;
   bool showTutorial = false;
+  final prefsService = SharedPrefsService();
 
   @override
   void initState() {
@@ -49,6 +51,21 @@ class _LineGameHardScreenState extends State<LineGameHardScreen> {
     };
 
     showTutorial = true; // ถ้าต้องการแสดง Tutorial
+  }
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Line Hard', game.stars, 'yellow', true);
+
+// ปลดล็อคด่านถัดไป
+    await prefsService.updateLevelUnlockStatus('Line Hard', 'Line Quiz');
+
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Line Hard');
+    print("Saved Level Data: $result");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
   }
 
   @override
@@ -252,7 +269,7 @@ class _LineGameHardScreenState extends State<LineGameHardScreen> {
                 });
               },
               onButton2Pressed: () {
-                Navigator.pop(context);
+                _finishGame();
               },
             ),
           if (showResult && !isWin)

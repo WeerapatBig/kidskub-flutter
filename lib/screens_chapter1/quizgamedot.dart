@@ -1,18 +1,15 @@
 import 'dart:ui';
 import 'package:firstly/widgets/result_widget_quiz.dart';
-import 'package:firstly/screens/dotgamelist.dart';
+import 'package:firstly/screens/dot_game_list/dotgamelist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../function/background_audio_manager.dart';
+import '../screens/shared_prefs_service.dart';
 
 class DotQuizGame extends StatefulWidget {
-  final String starColor;
-  final int earnedStars;
   const DotQuizGame({
     super.key,
-    required this.starColor,
-    required this.earnedStars,
   });
 
   @override
@@ -33,6 +30,7 @@ class _DotQuizGameState extends State<DotQuizGame>
   bool showGreenFlash = false;
   bool showRedFlash = false;
 
+  final prefsService = SharedPrefsService();
   bool isWarningVisible = false;
 
   @override
@@ -83,6 +81,22 @@ class _DotQuizGameState extends State<DotQuizGame>
       ],
     },
   ];
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Dot Quiz', 1, 'purple', true);
+
+    await prefsService.updateLevelUnlockStatus('Dot Quiz', 'Line Motion');
+
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Dot Quiz');
+    final easyData = await prefsService.loadLevelData('Line Easy');
+    print("Saved Level Data: $result");
+    print("Saved Level Data: $easyData");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
+  }
 
   void showWarning(BuildContext context) {
     // ถ้ากำลังแสดง popup อยู่ ไม่ต้องแสดงซ้ำ
@@ -917,11 +931,7 @@ class _DotQuizGameState extends State<DotQuizGame>
                 });
               },
               onButton2Pressed: () {
-                // กดปุ่มไปต่อ
-                Navigator.pop(context, {
-                  'earnedStars': 1,
-                  'starColor': 'purple',
-                });
+                _finishGame();
               },
             ),
           if (hearts <= 0 && showResult)

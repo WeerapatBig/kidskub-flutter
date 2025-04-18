@@ -8,7 +8,7 @@ import 'package:firstly/widgets/showsticker.dart';
 import 'package:firstly/screens/game_backup/colorgame_easy.dart';
 import 'package:firstly/screens/game_backup/colorgamehard.dart';
 import 'package:firstly/screens_chapter1/dotgamehard.dart';
-import 'package:firstly/screens/dotgamelist.dart';
+import 'package:firstly/screens/dot_game_list/dotgamelist.dart';
 import 'package:firstly/screens/game_backup/gameline2.dart';
 import 'package:firstly/screens/gamelinehard.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
@@ -17,10 +17,9 @@ import 'package:firstly/screens/linegamelist.dart';
 import 'package:firstly/screens_chapter1/motionlevel1.dart';
 import 'package:firstly/screens_chapter1/quizgamedot.dart';
 import 'package:firstly/screens/strickerbook.dart';
-import 'package:firstly/screens_chapter1/dotgameeasy.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:firstly/screens_chapter2/line_game_hard_screen.dart';
-import 'package:firstly/screens_chapter2/line_game_test.dart';
+import 'package:firstly/screens_chapter2/line_game_easy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,32 +66,19 @@ class DesignQuestApp extends StatelessWidget {
             ),
         '/gameselectionpage': (context) => const GameSelectionPage(),
 
-        '/line_game_test': (contex) => DrawLineGameScreen(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
+        '/line_game_test': (contex) => DrawLineGameScreen(),
         '/line_game_hard_test': (contex) => const LineGameHardScreen(
             // starColor: 'yellow',
             // earnedStars: 0,
             ),
         '/gameline-2': (context) => const GameLine2(), // Example of "เกมเส้น"
-        '/dotgamehard': (context) => const DotGameHard(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
+        '/dotgamehard': (context) => const DotGameHard(),
         '/colorgamehard': (context) => const ColorGameHard(),
-        '/quizgamedot': (context) => const DotQuizGame(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
+        '/quizgamedot': (context) => const DotQuizGame(),
         '/colorgame_easy': (context) => const GameColorEasyScreen(),
         '/gamelinehard': (context) => const LineGameHard(),
         '/dotgamelist': (context) => const DotGameList(),
         '/linegamelist': (context) => const LineGameList(),
-        '/dotgameeasy': (context) => const DotGameEasy(
-              starColor: 'yellow',
-              earnedStars: 0,
-            ),
         '/result_widget_quiz': (context) => ResultWidgetQuiz(
               onLevelComplete: true,
               starsEarned: 0,

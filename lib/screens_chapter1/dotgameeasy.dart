@@ -1,32 +1,30 @@
 import 'dart:ui' as ui;
-import 'package:firstly/screens/dotgamelist.dart';
+import 'package:firstly/screens/list_game_page/list_game_dot_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firstly/function/background_audio_manager.dart';
 
+import '../screens/shared_prefs_service.dart';
 import '../widgets/drawing_effect.dart';
 import '../widgets/progressbar.dart';
 import '../widgets/result_widget.dart';
 
 class DotGameEasy extends StatefulWidget {
-  final String starColor;
-  final int earnedStars;
-
   const DotGameEasy({
     super.key,
-    required this.starColor,
-    required this.earnedStars,
   });
-
   @override
   _DotGameEasyState createState() => _DotGameEasyState();
 }
 
 class _DotGameEasyState extends State<DotGameEasy> {
   int currentLevel = 1; // ระดับเริ่มต้น
-  int getStar = 0;
+  int earnedStars = 0;
 
+  String starColor = 'yellow';
   bool showEndWidget = false; // สถานะสำหรับแสดง ResultWidget
+
+  final prefsService = SharedPrefsService();
 
   void _endGame() {
     setState(() {
@@ -37,11 +35,26 @@ class _DotGameEasyState extends State<DotGameEasy> {
   Future<void> _completeLevel() async {
     setState(() {
       currentLevel++;
-      getStar++;
-      if (getStar == 3 || currentLevel == 4) {
+      earnedStars++;
+      if (earnedStars == 3 || currentLevel == 4) {
         _endGame();
       }
     });
+  }
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Dot Easy', earnedStars, 'yellow', true);
+
+// ปลดล็อคด่านถัดไป
+    await prefsService.updateLevelUnlockStatus('Dot Easy', 'Dot Hard');
+
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Dot Easy');
+    print("Saved Level Data: $result");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
   }
 
   @override
@@ -64,7 +77,7 @@ class _DotGameEasyState extends State<DotGameEasy> {
               left: barWidth * 0.32, // ระยะห่างจากด้านซ้าย
               right: barWidth * 0.38, // ระยะห่างจากด้านขวา
               child: ProgressBarWidget(
-                getStars: getStar, // กำหนดค่า Progress Bar ตามระดับ Level
+                getStars: earnedStars, // กำหนดค่า Progress Bar ตามระดับ Level
                 starPositions: [
                   barWidth * 0.06,
                   barWidth * 0.16,
@@ -111,21 +124,17 @@ class _DotGameEasyState extends State<DotGameEasy> {
                 // ฉากหลังโปร่งใส
                 child: ResultWidget(
                   onLevelComplete: true,
-                  starsEarned: getStar,
+                  starsEarned: earnedStars,
                   onButton1Pressed: () {
                     // ฟังก์ชันเมื่อปุ่มที่ 1 ถูกกด (เล่นอีกครั้ง)
                     setState(() {
                       showEndWidget = false;
                       currentLevel = 1;
-                      getStar = 0;
+                      earnedStars = 0;
                     });
                   },
                   onButton2Pressed: () {
-                    // ฟังก์ชันเมื่อกดหน้าถัดไป ส่งค่ากลับไป DotGameList
-                    Navigator.pop(context, {
-                      'starColor': widget.starColor,
-                      'earnedStars': getStar,
-                    });
+                    _finishGame();
                   },
                 ),
               )
@@ -328,7 +337,7 @@ abstract class BaseLevelWidgetState<T extends BaseLevelWidget>
           Navigator.push(
             context,
             PageRouteBuilder(
-              pageBuilder: (_, __, ___) => const DotGameList(),
+              pageBuilder: (_, __, ___) => const ListGameDotScreen(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 const begin = Offset(-1.0, 0.0);
