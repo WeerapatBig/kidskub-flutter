@@ -1,5 +1,7 @@
-import 'package:firstly/screens/strickerbook.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'stickerbook_page/services/sticker_prefs_service.dart';
 
 class ShowKeyPage extends StatefulWidget {
   final String stickerKey; // พารามิเตอร์สำหรับรูปภาพ
@@ -76,6 +78,8 @@ class _ShowKeyPageState extends State<ShowKeyPage>
     final Map<String, String> stickerImages = {
       // รูปภาพเริ่มต้น
       'sticker6': 'assets/images/strickerbook/sticker6.png', // รูปภาพเริ่มต้น
+      'sticker_key_2': 'assets/images/strickerbook/sticker_key_2.png',
+      'sticker_key_3': 'assets/images/strickerbook/sticker_key_3.png',
       'default': 'assets/images/strickerbook/sticker6.png', // รูปภาพเริ่มต้น
     };
 
@@ -99,10 +103,20 @@ class _ShowKeyPageState extends State<ShowKeyPage>
                 await StickerBookPrefsService.saveIsCollected(
                     widget.stickerKey, true);
 
-                print(
-                    'Sticker collected: ${widget.stickerKey} saved successfully.');
-                Navigator.pop(context,
-                    {'stickerKey': widget.stickerKey}); // กลับไปหน้าก่อนหน้า
+                final keyMap = {
+                  'sticker6': 'hasKey2',
+                  'sticker_key_2': 'hasKey3',
+                  'sticker_key_3': 'hasKey4',
+                };
+
+                final keyName = keyMap[widget.stickerKey];
+                if (keyName != null) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool(keyName, true);
+                  print('[DEBUG] Saved $keyName = true');
+                }
+
+                Navigator.pop(context);
               },
               child: Stack(
                 clipBehavior: Clip.none,

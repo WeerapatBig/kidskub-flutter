@@ -20,6 +20,11 @@ class ListGameLineScreen extends StatefulWidget {
 class _ListGameLineScreenState extends State<ListGameLineScreen>
     with TickerProviderStateMixin {
   final SharedPrefsService prefsService = SharedPrefsService();
+  @override
+  void initState() {
+    super.initState();
+    _refreshLineGameLevels();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +67,7 @@ class _ListGameLineScreenState extends State<ListGameLineScreen>
             levels: lineGameLevels.map((e) => e.title).toList(),
             prefsService: SharedPrefsService(),
             rewardList: starRewardsForLine,
+            chapterId: 'line',
           ),
           const CharacterAnimation(
             imagePath: 'assets/images/linegamelist/charactor_line.png',
@@ -82,6 +88,7 @@ class _ListGameLineScreenState extends State<ListGameLineScreen>
         item.starColor = loadedData['starColor'];
       }
     }
+    setState(() {}); // รีเฟรช UI
   }
 
   List<Widget> buildFloatingImages(BuildContext context) {

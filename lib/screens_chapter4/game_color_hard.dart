@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firstly/function/mediaquery_values.dart';
+import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:firstly/screens_chapter4/logic/game_color_hard_logic.dart';
 import 'package:firstly/screens_chapter4/model/progress_star_bar.dart';
 import 'package:firstly/screens_chapter4/model/time_progressbar.dart';
@@ -28,6 +29,7 @@ class GameColorHardScreen extends StatefulWidget {
 class _GameColorHardScreenState extends State<GameColorHardScreen> {
   static ColorGame? _game;
   late Level levelData;
+  final prefsService = SharedPrefsService();
   static Future<void>? _gameLoaded; // เก็บ Future ที่โหลดเกมไว้
 
   int currentScore = 0;
@@ -162,6 +164,21 @@ class _GameColorHardScreenState extends State<GameColorHardScreen> {
         showComboPopup = false;
       }
     });
+  }
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Color Hard', _starCount, 'yellow', true);
+
+// ปลดล็อคด่านถัดไป
+    await prefsService.updateLevelUnlockStatus('Color Hard', '');
+
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Color Hard');
+    print("Saved Level Data: $result");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
   }
 
   @override
@@ -327,7 +344,7 @@ class _GameColorHardScreenState extends State<GameColorHardScreen> {
                 starsEarned: _starCount,
                 // ปุ่มใน ResultWidget
                 onButton1Pressed: _onRetryPressed,
-                onButton2Pressed: Navigator.of(context).pop,
+                onButton2Pressed: _finishGame,
               ),
             ),
 

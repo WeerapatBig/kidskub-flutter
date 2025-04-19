@@ -33,28 +33,30 @@ final List<StarRewardData> starRewardsForLine = [
   const StarRewardData(
     starColor: 'purple',
     starRequirement: 1,
-    rewardImagePath: 'assets/images/rewards/purple_sticker.png',
-    rewardStickerName: 'purple_sticker_key',
+    rewardImagePath:
+        'assets/images/strickerbook/line_sticker/skibidi_sticker.png',
+    rewardStickerName: 'stickerLine5',
   ),
   const StarRewardData(
     starColor: 'yellow',
     starRequirement: 5,
-    rewardImagePath: 'assets/images/rewards/yellow_key.png',
-    rewardStickerName: 'yellow_key_01',
+    rewardImagePath: 'assets/images/strickerbook/sticker_key_2.png',
+    rewardStickerName: 'sticker_key_2',
   ),
 ];
 final List<StarRewardData> starRewardsForShape = [
   const StarRewardData(
     starColor: 'purple',
     starRequirement: 1,
-    rewardImagePath: 'assets/images/rewards/purple_sticker.png',
-    rewardStickerName: 'purple_sticker_key',
+    rewardImagePath:
+        'assets/images/strickerbook/line_sticker/skibidi_sticker.png',
+    rewardStickerName: 'stickerShape5',
   ),
   const StarRewardData(
     starColor: 'yellow',
     starRequirement: 5,
-    rewardImagePath: 'assets/images/rewards/yellow_key.png',
-    rewardStickerName: 'yellow_key_01',
+    rewardImagePath: 'assets/images/strickerbook/sticker_key_3.png',
+    rewardStickerName: 'sticker_key_3',
   ),
 ];
 final List<StarRewardData> starRewardsForColor = [
@@ -62,12 +64,12 @@ final List<StarRewardData> starRewardsForColor = [
     starColor: 'purple',
     starRequirement: 1,
     rewardImagePath: 'assets/images/rewards/purple_sticker.png',
-    rewardStickerName: 'purple_sticker_key',
+    rewardStickerName: 'stickerColor5',
   ),
   const StarRewardData(
     starColor: 'yellow',
     starRequirement: 5,
     rewardImagePath: 'assets/images/rewards/yellow_key.png',
-    rewardStickerName: 'yellow_key_01',
+    rewardStickerName: '',
   ),
 ];

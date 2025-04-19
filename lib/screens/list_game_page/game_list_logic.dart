@@ -3,8 +3,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/showkey.dart';
 import '../../widgets/showsticker.dart';
+import '../../widgets/stickerbook_page/services/sticker_prefs_service.dart';
 import '../shared_prefs_service.dart';
-import '../strickerbook.dart';
 import 'data/game_list_data.dart';
 import 'data/star_reward_data.dart';
 

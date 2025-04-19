@@ -1,7 +1,7 @@
 // ignore: file_names
 import 'package:firstly/function/background_audio_manager.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
-import 'package:firstly/screens/strickerbook.dart';
+import 'package:firstly/widgets/stickerbook_page/strickerbook.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:firstly/widgets/gamesettingsdialog.dart';
