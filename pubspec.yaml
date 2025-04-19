@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
   confetti: ^0.7.0
-  rive: ^0.13.14
   flutter_svg: ^2.0.10+1
   path_drawing: ^1.0.1
 
@@ -120,6 +119,12 @@ flutter:
 
   - assets/images/strickerbook/book1_left.png
   - assets/images/strickerbook/book1_right.png
+  - assets/images/strickerbook/book2_left.png
+  - assets/images/strickerbook/book2_right.png
+  - assets/images/strickerbook/book3_left.png
+  - assets/images/strickerbook/book3_Right.png
+  - assets/images/strickerbook/book4_left.png
+  - assets/images/strickerbook/book4_right.png
   - assets/images/strickerbook/screw.png
   - assets/images/strickerbook/title.png
   - assets/images/strickerbook/title_page1.png
@@ -144,6 +149,38 @@ flutter:
   - assets/images/strickerbook/sticker5_outline.png
   - assets/images/strickerbook/sticker6.png
   - assets/images/strickerbook/bg_elm.png
+  - assets/images/strickerbook/sticker_key_2.png
+  - assets/images/strickerbook/sticker_key_3.png
+  - assets/images/strickerbook/line_sticker/stickerLine1_outline.png
+  - assets/images/strickerbook/line_sticker/stickerLine1.png
+  - assets/images/strickerbook/line_sticker/stickerLine2_outline.png
+  - assets/images/strickerbook/line_sticker/stickerLine2.png
+  - assets/images/strickerbook/line_sticker/stickerLine3_outline.png
+  - assets/images/strickerbook/line_sticker/stickerLine3.png
+  - assets/images/strickerbook/line_sticker/stickerLine4_outline.png
+  - assets/images/strickerbook/line_sticker/stickerLine4.png
+  - assets/images/strickerbook/line_sticker/stickerLine5_outline.png
+  - assets/images/strickerbook/line_sticker/stickerLine5.png
+  - assets/images/strickerbook/shape_sticker/stickerShape1.png
+  - assets/images/strickerbook/shape_sticker/stickerShape1_outline.png
+  - assets/images/strickerbook/shape_sticker/stickerShape2.png
+  - assets/images/strickerbook/shape_sticker/stickerShape2_outline.png
+  - assets/images/strickerbook/shape_sticker/stickerShape3.png
+  - assets/images/strickerbook/shape_sticker/stickerShape3_outline.png
+  - assets/images/strickerbook/shape_sticker/stickerShape4.png
+  - assets/images/strickerbook/shape_sticker/stickerShape4_outline.png
+  - assets/images/strickerbook/shape_sticker/stickerShape5.png
+  - assets/images/strickerbook/shape_sticker/stickerShape5_outline.png
+  - assets/images/strickerbook/color_sticker/stickerColor1.png
+  - assets/images/strickerbook/color_sticker/stickerColor1_outline.png
+  - assets/images/strickerbook/color_sticker/stickerColor2.png
+  - assets/images/strickerbook/color_sticker/stickerColor2_outline.png
+  - assets/images/strickerbook/color_sticker/stickerColor3.png
+  - assets/images/strickerbook/color_sticker/stickerColor3_outline.png
+  - assets/images/strickerbook/color_sticker/stickerColor4.png 
+  - assets/images/strickerbook/color_sticker/stickerColor4_outline.png
+  - assets/images/strickerbook/color_sticker/stickerColor5.png
+  - assets/images/strickerbook/color_sticker/stickerColor5_outline.png
 
   - assets/images/questionImages/apple.png
   - assets/images/questionImages/blueberry.png
@@ -440,6 +477,11 @@ flutter:
   - assets/images/shapegame/quiz_shape/silhouette_4.png
 
   - assets/images/colorgame/grid_bg_color.png
+  - assets/images/colorgame/quiz_card_unlock.png
+  - assets/images/colorgame/card_lock.png
+  - assets/images/colorgame/card_comic.png
+  - assets/images/colorgame/lv1_card_unlock.png
+  - assets/images/colorgame/lv2_card_unlock.png
   - assets/images/colorgame/countdown.gif
   - assets/images/colorgame/X.png
   - assets/images/colorgame/color_game_star_empty.png
@@ -545,6 +587,10 @@ flutter:
   - assets/images/setting/music_icon.png
   - assets/images/setting/sfx_icon.png
   - assets/images/setting/exit.png
+
+  - assets/images/homepage/reset_bg.png
+  - assets/images/homepage/reset_button.png
+  - assets/images/homepage/hold_on_button.png
 
   
   - assets/music/background_music.mp3

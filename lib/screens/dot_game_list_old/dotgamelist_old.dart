@@ -11,8 +11,8 @@ import 'package:firstly/screens/gameselectionpage.dart';
 
 import '../../function/background_audio_manager.dart';
 import '../../function/pulse_effect.dart';
-import 'gamelist_data.dart';
-import 'gamelist_logic.dart';
+import 'gamelist_data_old.dart';
+import 'gamelist_logic_old.dart';
 
 class DotGameList extends StatefulWidget {
   const DotGameList({super.key});

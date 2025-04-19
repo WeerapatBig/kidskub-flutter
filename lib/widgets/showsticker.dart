@@ -1,5 +1,7 @@
-import 'package:firstly/screens/strickerbook.dart';
 import 'package:flutter/material.dart';
+
+import 'stickerbook_page/models/sticker_item_data.dart';
+import 'stickerbook_page/services/sticker_prefs_service.dart';
 
 class ShowStickerPage extends StatefulWidget {
   final String stickerKey; // พารามิเตอร์สำหรับรูปภาพ
@@ -16,6 +18,33 @@ class _ShowStickerPageState extends State<ShowStickerPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;
+
+  String? _findStickerImage(String key) {
+    List<StickerItem> allStickers = [
+      ...stickerChapterDot.leftStickers,
+      ...stickerChapterDot.rightStickers,
+      ...stickerChapterLine.leftStickers,
+      ...stickerChapterLine.rightStickers,
+      ...stickerChapterShape.leftStickers,
+      ...stickerChapterShape.rightStickers,
+      ...stickerChapterColor.leftStickers,
+      ...stickerChapterColor.rightStickers,
+    ];
+
+    return allStickers
+        .firstWhere(
+          (item) => item.key == key,
+          orElse: () => StickerItem(
+            key: 'default',
+            image: 'assets/images/strickerbook/sticker5.png',
+            imageOutline: '',
+            top: 0,
+            left: 0,
+            width: 0.1,
+          ),
+        )
+        .image;
+  }
 
   @override
   void initState() {
@@ -72,20 +101,8 @@ class _ShowStickerPageState extends State<ShowStickerPage>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    // ลิสต์รูปภาพทั้งหมด
-    final Map<String, String> stickerImages = {
-      'sticker1': 'assets/images/strickerbook/sticker1.png',
-      'sticker2': 'assets/images/strickerbook/sticker2.png',
-      'sticker3': 'assets/images/strickerbook/sticker3.png',
-      'sticker4': 'assets/images/strickerbook/sticker4.png', // รูปภาพเริ่มต้น
-      'sticker5': 'assets/images/strickerbook/sticker5.png', // รูปภาพเริ่มต้น
-      'sticker6': 'assets/images/strickerbook/sticker6.png', // รูปภาพเริ่มต้น
-      'default': 'assets/images/strickerbook/sticker5.png', // รูปภาพเริ่มต้น
-    };
 
-    // เลือกรูปภาพตามพารามิเตอร์
-    final String selectedImage =
-        stickerImages[widget.stickerKey] ?? stickerImages['default']!;
+    final String selectedImage = _findStickerImage(widget.stickerKey)!;
 
     return Container(
       color: Colors.transparent,

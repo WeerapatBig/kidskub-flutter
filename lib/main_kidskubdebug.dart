@@ -1,6 +1,5 @@
 import 'package:firstly/function/background_audio_manager.dart';
 import 'package:firstly/screens/homepage.dart';
-import 'package:firstly/screens/strickerbook.dart';
 import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:firstly/screens_chapter1/dotgameeasy.dart';
 import 'package:firstly/screens_chapter1/dotgamehard.dart';
@@ -9,6 +8,7 @@ import 'package:firstly/screens_chapter1/quizgamedot.dart';
 import 'package:firstly/screens_chapter2/line_game_quiz.dart';
 import 'package:firstly/screens_chapter2/line_game_easy.dart';
 import 'package:firstly/widgets/result_lottie.dart';
+import 'package:firstly/widgets/stickerbook_page/services/sticker_prefs_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +19,7 @@ import 'screens_chapter3/shape_quiz/screen/screen_game_shape_quiz.dart';
 import 'screens_chapter4/game_color_easy.dart';
 import 'screens_chapter4/game_color_hard.dart';
 import 'screens_chapter4/quiz_color/game_color_quiz_screen/game_color_quiz_intro_screen.dart';
+import 'widgets/stickerbook_page/strickerbook.dart';
 //import 'package:flutter/rendering.dart'; //เปิดการแสดงผลขอบเขต Widget
 
 Future<void> main() async {
@@ -51,7 +52,7 @@ class DesignQuestApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.kodchasanTextTheme(),
       ),
-      initialRoute: '/game_color_quiz_intro_screen',
+      initialRoute: '/strickerbook',
       onGenerateRoute: _generateRoute,
     );
   }
@@ -95,6 +96,8 @@ Route<dynamic>? _generateRoute(RouteSettings settings) {
               ));
     case '/game_color_hard':
       return MaterialPageRoute(builder: (_) => const GameColorHardScreen());
+    case '/strickerbook':
+      return MaterialPageRoute(builder: (_) => const StickerBookPage());
 
     default:
       return null; // กรณี Route ไม่พบ

@@ -1,6 +1,8 @@
+import 'package:firstly/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../function/background_audio_manager.dart';
+import 'stickerbook_page/widget/widget_reset_data_game.dart';
 
 class GameSettingsDialog extends StatefulWidget {
   const GameSettingsDialog({super.key});
@@ -278,6 +280,38 @@ class _GameSettingsDialogState extends State<GameSettingsDialog> {
               ),
             ),
           ),
+
+          //
+          Positioned(
+            bottom: screenHeight * 0.055,
+            right: 0,
+            left: 0,
+            child: Center(
+              child: CustomButton(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => const WidgetResetDataGame(),
+                  );
+                },
+                child: Text(
+                  'รีเซ็ตความคืบหน้า',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.grey.shade600,
+                    //ขีดเส้นใต้
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.grey.shade600,
+                    //เว้นระยะ
+                    decorationThickness: 2,
+                    decorationStyle: TextDecorationStyle.solid,
+                  ),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

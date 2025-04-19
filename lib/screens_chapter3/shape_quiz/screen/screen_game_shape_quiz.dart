@@ -1,6 +1,7 @@
 // lib/screen/screen_game_shape_quiz.dart
 
 import 'package:firstly/function/mediaquery_values.dart';
+import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import '../../../widgets/custom_button.dart';
@@ -20,6 +21,7 @@ class ScreenGameShapeQuiz extends StatefulWidget {
 
 class _ScreenGameShapeQuizState extends State<ScreenGameShapeQuiz> {
   final PlayerDataManager _playerData = PlayerDataManager(hearts: 3);
+  final prefsService = SharedPrefsService();
 
   late TangramGame? _game;
 
@@ -48,6 +50,19 @@ class _ScreenGameShapeQuizState extends State<ScreenGameShapeQuiz> {
         });
       };
     // (ปรับแก้ตามโค้ดของคุณเอง ถ้าต้องการสร้าง TangramGame แบบมี levelData)
+  }
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Shape Quiz', 1, 'purple', true);
+
+    await prefsService.updateLevelUnlockStatus('Shape Quiz', 'Color Motion');
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Shape Quiz');
+    print("Saved Level Data: $result");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
   }
 
   void onGameOver() {
@@ -182,7 +197,7 @@ class _ScreenGameShapeQuizState extends State<ScreenGameShapeQuiz> {
                 resetGame();
               },
               onButton2Pressed: () {
-                Navigator.pop(context);
+                _finishGame();
               },
             ),
           if (showResult && !isWin)
@@ -193,7 +208,7 @@ class _ScreenGameShapeQuizState extends State<ScreenGameShapeQuiz> {
                 resetGame();
               },
               onButton2Pressed: () {
-                Navigator.pop(context);
+                _finishGame();
               },
             ),
         ],

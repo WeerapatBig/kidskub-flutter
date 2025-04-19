@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:firstly/function/mediaquery_values.dart';
+import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/custom_button.dart';
@@ -31,6 +32,7 @@ class _GameShapeHardScreenState extends State<GameShapeHardScreen>
 
   late ShapeGameController _gameController;
   late ValueNotifier<int> _timeNotifier;
+  final prefsService = SharedPrefsService();
 
   Timer? _timer; // ประกาศตัวแปรเก็บ Timer ที่ระดับ State
   final Map<String, ButtonState> _buttonStates = {};
@@ -45,6 +47,7 @@ class _GameShapeHardScreenState extends State<GameShapeHardScreen>
   late Animation<double> _countdownAnimation;
   int _currentCountdown = 3;
 
+  int earnedStars = 0; // จำนวนดาวที่ได้จากการเล่น
   bool _isLevelTransitioning = false;
 
   bool showStarCongrate = false; // เพิ่มตัวแปรระดับ State
@@ -55,6 +58,7 @@ class _GameShapeHardScreenState extends State<GameShapeHardScreen>
 
     // สร้างตัว Controller game
     _gameController = ShapeGameController();
+    earnedStars = _gameController.calculateStars(); // รีเซ็ตดาวที่ได้
 
     // เริ่มต้น Animation สำหรับ Countdown
     _countdownAnimationController = AnimationController(
@@ -630,7 +634,7 @@ class _GameShapeHardScreenState extends State<GameShapeHardScreen>
                 });
               },
               onButton2Pressed: () {
-                Navigator.pop(context);
+                _finishGame();
               },
             ),
           if (showResult && !isWin)
@@ -638,7 +642,7 @@ class _GameShapeHardScreenState extends State<GameShapeHardScreen>
               onLevelComplete: isWin, // ตัวอย่าง
               starsEarned: 0,
               onButton1Pressed: () {
-                Navigator.pop(context);
+                _finishGame();
               },
               onButton2Pressed: () {
                 setState(() {
@@ -651,5 +655,20 @@ class _GameShapeHardScreenState extends State<GameShapeHardScreen>
         ],
       ),
     );
+  }
+
+  void _finishGame() async {
+    // บันทึกข้อมูลของด่านปัจจุบัน
+    await prefsService.saveLevelData('Shape Hard', earnedStars, 'yellow', true);
+
+// ปลดล็อคด่านถัดไป
+    await prefsService.updateLevelUnlockStatus('Shape Hard', 'Shape Quiz');
+
+    // ตรวจสอบข้อมูลที่บันทึก
+    final result = await prefsService.loadLevelData('Shape Hard');
+    print("Saved Level Data: $result");
+
+    // กลับไปยังหน้าเลือกเกม
+    Navigator.pop(context);
   }
 }

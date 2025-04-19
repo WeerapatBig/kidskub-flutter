@@ -1,6 +1,7 @@
 import 'dart:ui';
+import 'package:firstly/function/mediaquery_values.dart';
+import 'package:firstly/widgets/custom_button.dart';
 import 'package:firstly/widgets/result_widget_quiz.dart';
-import 'package:firstly/screens/dot_game_list/dotgamelist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -280,6 +281,42 @@ class _DotQuizGameState extends State<DotQuizGame>
     });
   }
 
+  Widget _buildExitPopUp(BuildContext context) {
+    double imageWidth = MediaQuery.of(context).size.width;
+    double imageHeight = MediaQuery.of(context).size.height;
+
+    return Container(
+      //สีพื้นหลัง
+      color: Colors.black.withOpacity(0.5),
+      child: AlertDialog(
+        backgroundColor: Colors.transparent, // สีพื้นหลัง
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // ปุ่มออก
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop(); // ปิด popup
+                Navigator.of(context).pop(); // ออกจากหน้า
+              },
+              child: Image.asset('assets/images/linegamelist/exit_button.png',
+                  width: imageWidth * 0.28, height: imageHeight * 0.48),
+            ),
+            SizedBox(width: imageWidth * 0.02),
+            // ปุ่มเล่นต่อ
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop(); // ปิด popup
+              },
+              child: Image.asset('assets/images/linegamelist/resume_button.png',
+                  width: imageWidth * 0.2, height: imageHeight * 0.2),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget draggableDice(int diceNumber) {
     double imageWidth = MediaQuery.of(context).size.width;
     double imageHeight = MediaQuery.of(context).size.height;
@@ -323,52 +360,6 @@ class _DotQuizGameState extends State<DotQuizGame>
           'assets/images/quizdot/dice_$diceNumber.png',
           width: imageWidth * 0.125,
           height: imageHeight * 0.2,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBackButton(BuildContext context) {
-    Size buttonSize = MediaQuery.of(context).size;
-    double buttonWidth = MediaQuery.of(context).size.width * 0.028;
-    double buttonHeight = MediaQuery.of(context).size.height * 0.028;
-    return Positioned(
-      width: buttonSize.width * 0.045,
-      height: buttonSize.height * 0.085,
-      left: buttonWidth,
-      top: buttonHeight,
-      child: FloatingActionButton(
-        onPressed: () {
-          BackgroundAudioManager()
-              .playButtonBackSound(); // เล่นเสียงเมื่อสัมผัสหน้าจ
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (_, __, ___) => const DotGameList(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(-1.0, 0.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
-
-                final tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
-
-                return SlideTransition(
-                  position: animation.drive(tween),
-                  child: child,
-                );
-              },
-              transitionDuration: const Duration(milliseconds: 800),
-            ),
-          );
-        },
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          size: buttonSize.width * 0.05,
-          color: const Color.fromARGB(255, 21, 21, 21),
         ),
       ),
     );
@@ -467,85 +458,12 @@ class _DotQuizGameState extends State<DotQuizGame>
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
-                              'assets/images/quizdot/bg_grid_quizdot.png'),
+                              'assets/images/linegamelist/line_quiz/paper_bg.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
-
-                  // รูปโปร่งขนาดเต็มจอ
-                  Positioned.fill(
-                    child: Image.asset(
-                      'assets/images/quizdot/transparent_overlay.png', // ไฟล์รูปภาพที่โปร่ง
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-
-                  // เพิ่มรูปดาว 3 รูป
-                  Positioned(
-                    top: screenHeight * 0.01,
-                    left: screenWidth * 0.01,
-                    child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(
-                        sigmaX: 3.0, // ค่าความฟุ้งในแกน X
-                        sigmaY: 3.0, // ค่าความฟุ้งในแกน Y
-                      ),
-                      child: Transform.rotate(
-                        angle: 45 *
-                            3.14159 /
-                            180, // หมุนภาพ 45 องศา (แปลงเป็นเรเดียน)
-                        child: Image.asset(
-                          'assets/images/quizdot/bg_elm.png', // รูปภาพ
-                          width: screenWidth * 0.18, // ปรับขนาด
-                          height: screenHeight * 0.3, // ปรับขนาด
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    bottom: screenHeight * -0.22,
-                    left: screenWidth * -0.1,
-                    child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(
-                        sigmaX: 3.0, // ค่าความฟุ้งในแกน X
-                        sigmaY: 3.0, // ค่าความฟุ้งในแกน Y
-                      ),
-                      child: Transform.rotate(
-                        angle: 35 *
-                            3.14159 /
-                            180, // หมุนภาพ 45 องศา (แปลงเป็นเรเดียน)
-                        child: Image.asset(
-                          'assets/images/quizdot/bg_elm.png', // รูปภาพ
-                          width: screenWidth * 0.4, // ปรับขนาด
-                          height: screenHeight * 0.7, // ปรับขนาด
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    top: screenHeight * 0.035,
-                    right: screenWidth * 0.01,
-                    child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(
-                        sigmaX: 3.0, // ค่าความฟุ้งในแกน X
-                        sigmaY: 3.0, // ค่าความฟุ้งในแกน Y
-                      ),
-                      child: Transform.rotate(
-                        angle: 25 *
-                            3.14159 /
-                            180, // หมุนภาพ 45 องศา (แปลงเป็นเรเดียน)
-                        child: Image.asset(
-                          'assets/images/quizdot/bg_elm.png', // รูปภาพ
-                          width: screenWidth * 0.25, // ปรับขนาด
-                          height: screenHeight * 0.35, // ปรับขนาด
-                        ),
-                      ),
-                    ),
-                  ),
-
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -896,28 +814,42 @@ class _DotQuizGameState extends State<DotQuizGame>
                 ),
               ),
             ),
-          _buildBackButton(context),
           Positioned(
-            top: screenWidth * 0.01,
-            right: screenHeight * 0.02,
+            top: context.screenHeight * 0.05,
+            right: context.screenWidth * 0.04,
+            child: CustomButton(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => _buildExitPopUp(context),
+                );
+              },
+              child: Image.asset(
+                'assets/images/close_button.png',
+                width: context.screenWidth * 0.060,
+              ),
+            ),
+          ),
+          Positioned(
+            top: context.screenHeight * -0.01,
+            left: context.screenWidth * 0.05,
             child: buildHearts(),
           ),
           Positioned(
             bottom: screenHeight * 0.05,
             right: screenWidth * 0.05,
-            child: FloatingActionButton(
-                onPressed: () {
-                  BackgroundAudioManager().playHintButtonSound();
-                  setState(() {
-                    showTutorial = true; // เปิด TutorialWidget
-                  });
-                },
-                backgroundColor: Colors.white.withOpacity(0),
-                elevation: 0,
-                hoverElevation: 0,
-                focusElevation: 0,
-                highlightElevation: 0,
-                child: Image.asset('assets/images/HintButton.png')),
+            child: CustomButton(
+              onTap: () {
+                setState(() {
+                  showTutorial = true; // เปิด TutorialWidget
+                });
+              },
+              child: Image.asset(
+                'assets/images/HintButton.png',
+                width: context.screenWidth * 0.060,
+              ),
+            ),
           ),
           if (showTutorial) _buildTutorialWidget(), // วิดเจ็ตการสอนเล่น
           // แสดง ResultWidget เมื่อ showResult เป็น true

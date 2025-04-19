@@ -19,6 +19,11 @@ class ListGameDotScreen extends StatefulWidget {
 class _ListGameDotScreenState extends State<ListGameDotScreen>
     with TickerProviderStateMixin {
   final SharedPrefsService prefsService = SharedPrefsService();
+  @override
+  void initState() {
+    super.initState();
+    _refreshDotGameLevels();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +66,7 @@ class _ListGameDotScreenState extends State<ListGameDotScreen>
             levels: dotGameLevels.map((e) => e.title).toList(),
             prefsService: SharedPrefsService(),
             rewardList: starRewardsForDot,
+            chapterId: 'dot',
           ),
           const CharacterAnimation(
             imagePath: 'assets/images/dotchapter/chractor1.png',
@@ -81,6 +87,7 @@ class _ListGameDotScreenState extends State<ListGameDotScreen>
         item.starColor = loadedData['starColor'];
       }
     }
+    setState(() {}); // รีเฟรช UI
   }
 
   List<Widget> buildFloatingImages(BuildContext context) {

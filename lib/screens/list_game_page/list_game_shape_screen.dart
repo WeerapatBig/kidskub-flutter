@@ -11,16 +11,22 @@ import '../shared_prefs_service.dart';
 import 'data/game_list_data.dart';
 import 'game_level_card.dart';
 
-class ListGameLineScreen extends StatefulWidget {
-  const ListGameLineScreen({super.key});
+class ListGameShapeScreen extends StatefulWidget {
+  const ListGameShapeScreen({super.key});
 
   @override
-  State<ListGameLineScreen> createState() => _ListGameLineScreenState();
+  State<ListGameShapeScreen> createState() => _ListGameShapeScreenState();
 }
 
-class _ListGameLineScreenState extends State<ListGameLineScreen>
+class _ListGameShapeScreenState extends State<ListGameShapeScreen>
     with TickerProviderStateMixin {
   final SharedPrefsService prefsService = SharedPrefsService();
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshShapeGameLevels();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +53,7 @@ class _ListGameLineScreenState extends State<ListGameLineScreen>
                       // เรียก onLevelTap แบบ await
                       await onLevelTap(context, level, this);
                       // จากนั้นรีโหลดข้อมูลทุกด่านใน dotGameLevels
-                      await _refreshLineGameLevels();
+                      await _refreshShapeGameLevels();
                       // เมื่อกลับมาแล้ว ให้รีเฟรชหน้า
                       setState(() {});
                     },
@@ -60,9 +66,10 @@ class _ListGameLineScreenState extends State<ListGameLineScreen>
             onTap: () => navigateToGameSelectionPage(context),
           ),
           AccumulatedStarsWidget(
-            levels: lineGameLevels.map((e) => e.title).toList(),
+            levels: shapeGameLevels.map((e) => e.title).toList(),
             prefsService: SharedPrefsService(),
-            rewardList: starRewardsForLine,
+            rewardList: starRewardsForShape,
+            chapterId: 'shape',
           ),
           const CharacterAnimation(
             imagePath: 'assets/images/shapegame/charactor_shape.png',
@@ -73,7 +80,7 @@ class _ListGameLineScreenState extends State<ListGameLineScreen>
   }
 
   /// โหลดข้อมูล SharedPref มายัดกลับเข้า dotGameLevels
-  Future<void> _refreshLineGameLevels() async {
+  Future<void> _refreshShapeGameLevels() async {
     for (var item in shapeGameLevels) {
       final loadedData = await prefsService.loadLevelData(item.title);
       item.isUnlocked = loadedData['unlocked'];
@@ -83,6 +90,7 @@ class _ListGameLineScreenState extends State<ListGameLineScreen>
         item.starColor = loadedData['starColor'];
       }
     }
+    setState(() {}); // รีเฟรช UI
   }
 
   List<Widget> buildFloatingImages(BuildContext context) {

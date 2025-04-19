@@ -8,7 +8,7 @@ import 'package:firstly/widgets/showsticker.dart';
 import 'package:firstly/screens/game_backup/colorgame_easy.dart';
 import 'package:firstly/screens/game_backup/colorgamehard.dart';
 import 'package:firstly/screens_chapter1/dotgamehard.dart';
-import 'package:firstly/screens/dot_game_list/dotgamelist.dart';
+import 'package:firstly/screens/dot_game_list_old/dotgamelist_old.dart';
 import 'package:firstly/screens/game_backup/gameline2.dart';
 import 'package:firstly/screens/gamelinehard.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
@@ -16,24 +16,17 @@ import 'package:firstly/screens/homepage.dart';
 import 'package:firstly/screens/linegamelist.dart';
 import 'package:firstly/screens_chapter1/motionlevel1.dart';
 import 'package:firstly/screens_chapter1/quizgamedot.dart';
-import 'package:firstly/screens/strickerbook.dart';
-import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:firstly/screens_chapter2/line_game_hard_screen.dart';
 import 'package:firstly/screens_chapter2/line_game_easy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'widgets/stickerbook_page/strickerbook.dart';
 //import 'package:flutter/rendering.dart'; //เปิดการแสดงผลขอบเขต Widget
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // เรียกใช้การล้าง SharedPreferences
-  final SharedPrefsService sharedPrefsService = SharedPrefsService();
-  await sharedPrefsService.clearAllPreferences();
-
-  final StickerBookPrefsService prefsService = StickerBookPrefsService();
-  await prefsService.clearAllPreferences();
 
   BackgroundAudioManager(); // สร้างอินสแตนซ์เพื่อเริ่มต้นเสียงเพลง
   // ตั้งค่าหน้าจอเป็นแนวนอนเท่านั้น

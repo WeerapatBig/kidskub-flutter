@@ -105,11 +105,20 @@ class GameLevelCard extends StatelessWidget {
     double badgeWidth = screenWidth * 0.225;
     double badgeHeight = screenHeight * 0.21;
 
-    if (title == 'Dot Easy') {
+    if (title == 'Dot Easy' ||
+        title == 'Line Easy' ||
+        title == 'Shape Easy' ||
+        title == 'Color Easy') {
       badgeAsset = 'assets/images/dotchapter/card1_level.png';
-    } else if (title == 'Dot Hard') {
+    } else if (title == 'Dot Hard' ||
+        title == 'Line Hard' ||
+        title == 'Shape Hard' ||
+        title == 'Color Hard') {
       badgeAsset = 'assets/images/dotchapter/card2_level.png';
-    } else if (title == 'Dot Quiz') {
+    } else if (title == 'Dot Quiz' ||
+        title == 'Line Quiz' ||
+        title == 'Shape Quiz' ||
+        title == 'Color Quiz') {
       badgeAsset = 'assets/images/dotchapter/card3_level.png';
       badgeWidth = screenWidth * 0.285; // กำหนดขนาดเฉพาะสำหรับ Quiz
       badgeHeight = screenHeight * 0.23;
@@ -130,12 +139,14 @@ class AccumulatedStarsWidget extends StatefulWidget {
   final List<String> levels;
   final SharedPrefsService prefsService;
   final List<StarRewardData> rewardList;
+  final String chapterId; // 🔸 เพิ่มตรงนี้
 
   const AccumulatedStarsWidget({
     Key? key,
     required this.levels,
     required this.prefsService,
     required this.rewardList,
+    required this.chapterId, // 🔸 รับตรงนี้ด้วย
   }) : super(key: key);
 
   @override
@@ -227,10 +238,10 @@ class _AccumulatedStarsWidgetState extends State<AccumulatedStarsWidget>
   }
 
   Future<void> _checkRewardStatus(int purple, int yellow) async {
-    final claimedPurple =
-        await widget.prefsService.isStarRewardClaimed('purple');
-    final claimedYellow =
-        await widget.prefsService.isStarRewardClaimed('yellow');
+    final claimedPurple = await widget.prefsService
+        .isStarRewardClaimed('${widget.chapterId}_purple');
+    final claimedYellow = await widget.prefsService
+        .isStarRewardClaimed('${widget.chapterId}_yellow');
 
     setState(() {
       canTapPurple = purple >= 1 && !claimedPurple;
@@ -307,8 +318,8 @@ class _AccumulatedStarsWidgetState extends State<AccumulatedStarsWidget>
                                   rewardList: widget.rewardList,
                                   starColor: 'purple',
                                 );
-                                await widget.prefsService
-                                    .saveStarRewardClaimed('purple');
+                                await widget.prefsService.saveStarRewardClaimed(
+                                    '${widget.chapterId}_purple');
                                 // หลัง popup
                                 setState(() {
                                   _sequenceController.reset();
@@ -388,8 +399,8 @@ class _AccumulatedStarsWidgetState extends State<AccumulatedStarsWidget>
                                   rewardList: widget.rewardList,
                                   starColor: 'yellow',
                                 );
-                                await widget.prefsService
-                                    .saveStarRewardClaimed('yellow');
+                                await widget.prefsService.saveStarRewardClaimed(
+                                    '${widget.chapterId}_yellow');
                                 setState(() {
                                   _sequenceController.reset();
                                   _sequenceController.stop();

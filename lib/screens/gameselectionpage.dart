@@ -1,13 +1,14 @@
 import 'dart:ui';
-import 'package:firstly/screens/colorgamelist.dart';
 import 'package:firstly/screens/homepage.dart';
 import 'package:firstly/screens/list_game_page/list_game_dot_screen.dart';
 import 'package:firstly/screens/list_game_page/list_game_line_screen.dart';
-import 'package:firstly/screens/shapegamelist.dart';
+import 'package:firstly/screens/list_game_page/list_game_shape_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../function/background_audio_manager.dart';
+import '../widgets/custom_button.dart';
+import 'list_game_page/list_game_color_screen.dart';
 // import 'shared_prefs_service.dart';
 // import 'chapter.dart';
 
@@ -22,9 +23,9 @@ class _GameSelectionPageState extends State<GameSelectionPage>
     with TickerProviderStateMixin {
   // ตัวแปรสถานะของกุญแจที่ผู้เล่นมีสำหรับแต่ละด่าน
   bool hasKey1 = true; //ลบ
-  bool hasKey2 = true;
-  bool hasKey3 = true;
-  bool hasKey4 = true;
+  bool hasKey2 = false;
+  bool hasKey3 = false;
+  bool hasKey4 = false;
 
   bool isShowingPopup = false;
 
@@ -33,8 +34,18 @@ class _GameSelectionPageState extends State<GameSelectionPage>
   // จำนวนดาวทั้งหมดที่สะสมได้จากทุก Chapter
   int totalStars = 0;
 
+  bool isUnlocked2 = false;
+  bool isUnlocked3 = false;
+  bool isUnlocked4 = false;
+
   // รายการสถานะการปลดล็อกของแต่ละด่าน
-  late List<bool> levelUnlocked; //ลบ
+  bool isChapterUnlocked(int index) {
+    if (index == 0) return true; // Dot เปิดตลอด
+    if (index == 1) return isUnlocked2;
+    if (index == 2) return isUnlocked3;
+    if (index == 3) return isUnlocked4;
+    return false;
+  }
 
   // รายการภาพของเกมสำหรับแต่ละด่าน
   final List<String> gameImages = [
@@ -83,9 +94,6 @@ class _GameSelectionPageState extends State<GameSelectionPage>
     // จากนั้นบันทึกข้อมูลใหม่
     _loadKeyStatus(); // โหลดสถานะกุญแจ
 
-    // กำหนดสถานะการปลดล็อกของแต่ละด่าน
-    levelUnlocked = [true, true, true, true];
-
     // สร้าง AnimationController สำหรับแต่ละด่าน
     lockShakeControllers = List.generate(gameImages.length, (index) {
       final controller = AnimationController(
@@ -111,20 +119,17 @@ class _GameSelectionPageState extends State<GameSelectionPage>
 
   // ฟังก์ชันโหลดสถานะของกุญแจจาก SharedPreferences
   void _loadKeyStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? loadedKey2 = prefs.getBool('hasKey2');
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      hasKey2 = loadedKey2 ?? false; // อัปเดต UI
-      print('Loaded hasKey2: $hasKey2'); // เพิ่มการดีบัค
-    }); // อัปเดต UI
-  }
+      hasKey2 = prefs.getBool('hasKey2') ?? false;
+      isUnlocked2 = prefs.getBool('isUnlocked2') ?? false;
 
-  // ฟังก์ชันบันทึกสถานะกุญแจใน SharedPreferences
-  void _saveKeyStatus(bool status) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool result = await prefs.setBool('hasKey2', status);
-    print(
-        'Saved hasKey2: $status, Success: $result'); // ตรวจสอบว่าการบันทึกทำงาน
+      hasKey3 = prefs.getBool('hasKey3') ?? false;
+      isUnlocked3 = prefs.getBool('isUnlocked3') ?? false;
+
+      hasKey4 = prefs.getBool('hasKey4') ?? false;
+      isUnlocked4 = prefs.getBool('isUnlocked4') ?? false;
+    });
   }
 
   @override
@@ -193,7 +198,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
       return GestureDetector(
         onTap: () {
           BackgroundAudioManager().playButtonClickSound(); // เล่นเสียงกดปุ่ม
-          if (levelUnlocked[index]) {
+          if (isChapterUnlocked(index)) {
             // ด่านถูกปลดล็อกแล้ว นำทางไปยังหน้าด่านเกมของคุณ
             navigateToLevelPage(index);
           } else {
@@ -203,11 +208,18 @@ class _GameSelectionPageState extends State<GameSelectionPage>
                 (index == 2 && hasKey3) ||
                 (index == 3 && hasKey4)) {
               // ผู้เล่นมีกุญแจสำหรับด่านนี้ เริ่มอนิเมชันปลดล็อก
-              unlockController.forward().then((_) {
+              unlockController.forward().then((_) async {
                 // เมื่ออนิเมชันจบ ปลดล็อกด่านและนำกุญแจออก
                 setState(() {
-                  levelUnlocked[index] = true;
+                  if (index == 1) isUnlocked2 = true;
+                  if (index == 2) isUnlocked3 = true;
+                  if (index == 3) isUnlocked4 = true;
                 });
+
+                final prefs = await SharedPreferences.getInstance();
+                if (index == 1) await prefs.setBool('isUnlocked2', true);
+                if (index == 2) await prefs.setBool('isUnlocked3', true);
+                if (index == 3) await prefs.setBool('isUnlocked4', true);
               });
             } else {
               BackgroundAudioManager().playChapterLockSound(); // เล่นเสียงล็อก
@@ -239,7 +251,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
                   )
                 else
                   Image.asset(
-                    levelUnlocked[index]
+                    isChapterUnlocked(index)
                         ? gameImages[index] // ถ้าปลดล็อคแล้วให้แสดงรูปภาพด่าน
                         : gameImagesLock[
                             index], // ถ้ายังไม่ปลดล็อคให้แสดงรูปภาพที่ถูกล็อค
@@ -248,7 +260,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
                     height: double.infinity,
                   ),
                 // ถ้าด่านยังไม่ถูกปลดล็อก แสดงแม่กุญแจพร้อมอนิเมชัน
-                if (index != 0 && !levelUnlocked[index])
+                if (index != 0 && !isChapterUnlocked(index))
                   buildLockAnimation(index, shakeController, unlockController),
               ],
             ),
@@ -326,7 +338,7 @@ class _GameSelectionPageState extends State<GameSelectionPage>
   void navigateToLevelPage(int index) async {
     switch (index) {
       case 0:
-        final result = await Navigator.push(
+        Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (_, __, ___) =>
@@ -348,40 +360,76 @@ class _GameSelectionPageState extends State<GameSelectionPage>
             transitionDuration: const Duration(milliseconds: 1000),
           ),
         );
-
-        // ตรวจสอบว่าผลลัพธ์ไม่เป็น null และมีค่าดาวที่ถูกส่งกลับมา
-        if (result != null && result is Map<String, dynamic>) {
-          print('Received result: $result'); // ตรวจสอบค่าที่ได้รับกลับมา
-          setState(() {
-            if (result['hasKey2'] == true) {
-              hasKey2 = true; // ปลดล็อค Chapter ถัดไป
-              _saveKeyStatus(hasKey2); // บันทึกสถานะกุญแจ
-              print('Chapter 2 unlocked!');
-            }
-          });
-        }
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const ListGameLineScreen(),
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                const ListGameLineScreen(), // เปลี่ยนไปยังหน้าใหม่
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, -1.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 1000),
           ),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ShapeGameList(),
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                const ListGameShapeScreen(), // เปลี่ยนไปยังหน้าใหม่
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, -1.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 1000),
           ),
         );
         break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ColorGameList(),
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                const ListGameColorScreen(), // เปลี่ยนไปยังหน้าใหม่
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, -1.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 1000),
           ),
         );
         break;
@@ -511,44 +559,41 @@ class _GameSelectionPageState extends State<GameSelectionPage>
   // ฟังก์ชันสำหรับสร้างปุ่มย้อนกลับ
   Widget buildBackButton() {
     return Positioned(
-      width: screenSize.width * 0.045,
-      height: screenSize.height * 0.085,
-      left: screenSize.width * 0.028,
-      top: screenSize.height * 0.028,
-      child: FloatingActionButton(
-        onPressed: () {
+      width: screenSize.width * 0.12,
+      height: screenSize.height * 0.2,
+      left: screenSize.width * 0.015,
+      top: screenSize.height * 0.01,
+      child: CustomButton(
+        onTap: () {
           BackgroundAudioManager().playButtonBackSound();
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (_, __, ___) => const HomePage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(-1.0, 0.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
+          navigateToGameSelectionPage(context);
+        },
+        child: Image.asset(
+          'assets/images/back_button.png',
+        ),
+      ),
+    );
+  }
 
-                final tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
+  void navigateToGameSelectionPage(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => const HomePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(-1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
 
-                return SlideTransition(
-                  position: animation.drive(tween),
-                  child: child,
-                );
-              },
-              transitionDuration: const Duration(milliseconds: 1000),
-            ),
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
           );
         },
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        hoverColor: Colors.transparent,
-        hoverElevation: 0,
-        child: Icon(
-          Icons.arrow_back_ios_new_rounded,
-          size: screenSize.width * 0.05,
-          color: Color.fromARGB(255, 21, 21, 21),
-        ),
+        transitionDuration: const Duration(milliseconds: 1000),
       ),
     );
   }
