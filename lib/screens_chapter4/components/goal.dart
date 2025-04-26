@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 
 /// สีทั้งหมดของ Goal (ใช้ 3 สีแรกก่อน)
 final List<Color> goalColors = [
-  const Color.fromARGB(255, 249, 72, 59),
-  const Color.fromARGB(255, 76, 183, 205),
-  const Color.fromARGB(255, 255, 170, 46),
-  Colors.green,
-  Colors.purple,
-  const Color.fromARGB(255, 255, 109, 52),
+  const Color(0xFFF9483B),
+  const Color(0xFF4CA6CD),
+  const Color(0xFFFFCB2E),
+  const Color(0xFF9AD547),
+  const Color(0xFFB268A3),
+  const Color(0xFFFF7B34),
 ];
 
 class GoalComponent extends PositionComponent with CollisionCallbacks {

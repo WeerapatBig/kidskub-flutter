@@ -85,6 +85,8 @@ flutter:
 
   - assets/images/iconapp.png
 
+  - assets/images/hand_guide.png
+
   - assets/images/homepage/kidskubhomepage.png
   - assets/images/homepage/grid.png
   - assets/images/homepage/buttonhome.png
@@ -507,12 +509,12 @@ flutter:
   - assets/images/colorgame/quiz_color/colors_wheel/empty_color_1.png
   - assets/images/colorgame/quiz_color/colors_wheel/empty_color_2.png
   - assets/images/colorgame/quiz_color/colors_wheel/empty_color_3.png
-  - assets/images/colorgame/quiz_color/colors_wheel/primary_blue_color.png
-  - assets/images/colorgame/quiz_color/colors_wheel/primary_red_color.png
-  - assets/images/colorgame/quiz_color/colors_wheel/primary_yellow_color.png
-  - assets/images/colorgame/quiz_color/colors_wheel/secondary_green_color.png
-  - assets/images/colorgame/quiz_color/colors_wheel/secondary_orange_color.png
-  - assets/images/colorgame/quiz_color/colors_wheel/secondary_purple_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/blue_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/red_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/yellow_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/green_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/orange_color.png
+  - assets/images/colorgame/quiz_color/colors_wheel/purple_color.png
   
   - assets/images/colorgame/quiz_color/dialog/dialogs_1.png
   - assets/images/colorgame/quiz_color/dialog/dialogs_2.png
@@ -520,10 +522,28 @@ flutter:
   - assets/images/colorgame/quiz_color/dialog/dialogs_4.png
   - assets/images/colorgame/quiz_color/dialog/dialogs_5.png
   - assets/images/colorgame/quiz_color/dialog/dialogs_6.png
-  - assets/images/colorgame/quiz_color/dialog/dialogs_7.png
   - assets/images/colorgame/quiz_color/dialog/character_red.png
-  
+  - assets/images/colorgame/quiz_color/dialog/right_arrow.png
+  - assets/images/colorgame/quiz_color/dialog/left_arrow.png
+  - assets/images/colorgame/quiz_color/objective_1.png
+  - assets/images/colorgame/quiz_color/objective_2.png
+  - assets/images/colorgame/quiz_color/objective_3.png
+  - assets/images/colorgame/quiz_color/tutorial_quiz_color.png
   - assets/images/result/back.png
+  - assets/images/colorgame/quiz_color/plus.png
+  - assets/images/colorgame/quiz_color/equal.png
+  - assets/images/colorgame/quiz_color/blob_quest.png
+  - assets/images/colorgame/quiz_color/blob_blue.png
+  - assets/images/colorgame/quiz_color/blob_red.png
+  - assets/images/colorgame/quiz_color/blob_yellow.png
+  - assets/images/colorgame/quiz_color/blob_green.png
+  - assets/images/colorgame/quiz_color/blob_orange.png
+  - assets/images/colorgame/quiz_color/blob_purple.png
+  - assets/images/colorgame/quiz_color/elm_red.png
+  - assets/images/colorgame/quiz_color/elm_blue.png
+  - assets/images/colorgame/quiz_color/elm_yellow.png
+  - assets/images/colorgame/quiz_color/elm_green.png
+
   - assets/images/result/exit.png
   - assets/images/result/replay_yellow.png
   - assets/images/result/character1.png
@@ -636,6 +656,10 @@ flutter:
   - assets/lottie/Yellow_3_Stars_Score_Anim.json
   - assets/lottie/Yellow_0_Stars_Score_Anim.json
   - assets/lottie/Yellow_1_Stars_Score_Anim.json
+  - assets/lottie/color_lottie/color_quiz_1.json
+  - assets/lottie/color_lottie/color_easy_hard.json
+  - assets/lottie/color_lottie/color_quiz.json
+  - assets/lottie/shape_lottie/shape_easy_hard.json
 
   #   - images/a_dot_ham.jpeg
 

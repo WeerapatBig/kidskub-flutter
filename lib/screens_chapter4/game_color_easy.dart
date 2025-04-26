@@ -7,6 +7,7 @@ import 'package:firstly/screens_chapter4/model/time_progressbar.dart';
 import 'package:firstly/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
+import 'package:lottie/lottie.dart';
 import '../widgets/result_widget.dart';
 import 'levels/levels_data.dart';
 import 'logic/game_color_logic.dart';
@@ -27,7 +28,7 @@ class GameColorEasyScreen extends StatefulWidget {
 
 class _GameColorEasyScreenState extends State<GameColorEasyScreen> {
   static ColorGame? _game;
-  late Level levelData;
+  late Level levelData = level1;
   final prefsService = SharedPrefsService();
   static Future<void>? _gameLoaded; // เก็บ Future ที่โหลดเกมไว้
 
@@ -52,8 +53,8 @@ class _GameColorEasyScreenState extends State<GameColorEasyScreen> {
     super.initState();
     // ตรวจสอบว่า _gameLoaded เป็น null ไหม ถ้าเป็น null แสดงว่ายังไม่เคยโหลด
 
+    levelData = level1;
     if (_gameLoaded == null) {
-      levelData = level1;
       // สร้างเกมด้วย level1
       _game = ColorGame(
         levelData,
@@ -403,8 +404,9 @@ class _GameColorEasyScreenState extends State<GameColorEasyScreen> {
                     ],
                   ),
                   padding: const EdgeInsets.all(10),
-                  child: Image.asset(
-                    'assets/images/shapegame/tutorial_shape_easy.gif', // แก้รูปภาพการสอน
+                  child: Lottie.asset(
+                    'assets/lottie/color_lottie/color_easy_hard.json', // ก็คือ path ของไฟล์ .json
+                    width: MediaQuery.of(context).size.width * 0.5,
                     fit: BoxFit.contain,
                   ),
                 ),

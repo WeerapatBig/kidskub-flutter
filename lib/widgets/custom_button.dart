@@ -33,7 +33,7 @@ class _CustomButtonState extends State<CustomButton> {
         setState(() {
           _isPressed = false;
         });
-        widget.onTap!(); // เรียกฟังก์ชันของปุ่มเมื่อปล่อยนิ้ว
+        widget.onTap?.call(); // เรียกฟังก์ชันของปุ่มเมื่อปล่อยนิ้ว
       },
       onTapCancel: () {
         setState(() {

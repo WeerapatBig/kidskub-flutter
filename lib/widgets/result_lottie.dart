@@ -1,45 +1,77 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:lottie/lottie.dart';
 
 class ResultWidgetLottie extends StatefulWidget {
   final bool onLevelComplete;
   final int starsEarned;
-  final String imagePath;
   final VoidCallback onButton1Pressed;
   final VoidCallback onButton2Pressed;
+  final VoidCallback onButton3Pressed;
 
   const ResultWidgetLottie({
     super.key,
     required this.onLevelComplete,
     required this.starsEarned,
-    required this.imagePath,
     required this.onButton1Pressed,
     required this.onButton2Pressed,
+    required this.onButton3Pressed,
   });
 
   @override
   State<ResultWidgetLottie> createState() => _ResultWidgetLottieState();
 }
 
-class _ResultWidgetLottieState extends State<ResultWidgetLottie> {
-  bool _showSecondImage = false;
+class _ResultWidgetLottieState extends State<ResultWidgetLottie>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  bool _isLooping = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.onLevelComplete) {
-      Future.delayed(const Duration(milliseconds: 4400), () {
-        if (mounted) {
-          setState(() => _showSecondImage = true);
-        }
-      });
-    }
+    _controller = AnimationController(vsync: this);
   }
 
-  String _getStarsStPath() =>
-      'assets/images/result/gif_anim_result/${widget.imagePath}_chapter_result/${widget.starsEarned}_stars_st.gif';
-  String _getStarsNdPath() =>
-      'assets/images/result/gif_anim_result/${widget.imagePath}_chapter_result/${widget.starsEarned}_stars_nd.gif';
+  String _getLottiePath() {
+    return 'assets/lottie/Yellow_${widget.starsEarned}_Stars_Score_Anim.json';
+  }
+
+  void _onLottieLoaded(LottieComposition composition) {
+    _controller
+      ..duration = composition.duration
+      ..forward();
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed && !_isLooping) {
+        _isLooping = true;
+        if (widget.starsEarned == 0) {
+          // ได้ 0 ดาว → ให้หยุดที่ 90%
+          _controller.animateTo(
+            0.9,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOut,
+          );
+        } else {
+          const double loopStart = 0.71; // 70% ของ timeline
+          const double loopEnd = 0.85; // 100% ของ timeline
+          _controller.repeat(
+            min: loopStart,
+            max: loopEnd,
+            period: Duration(
+                milliseconds: ((loopEnd - loopStart) *
+                        composition.duration.inMilliseconds)
+                    .round()),
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +83,14 @@ class _ResultWidgetLottieState extends State<ResultWidgetLottie> {
         ),
         if (widget.onLevelComplete)
           Center(
-              child: AnimatedCrossFade(
-            duration: const Duration(milliseconds: 500),
-            firstCurve: Curves.bounceInOut,
-            secondCurve: Curves.bounceInOut,
-            firstChild: Image.asset(
-              _getStarsStPath(),
-              width: MediaQuery.of(context).size.width * 0.7,
+            child: Lottie.asset(
+              _getLottiePath(),
+              controller: _controller,
+              onLoaded: _onLottieLoaded,
+              width: MediaQuery.of(context).size.width * 0.8,
+              fit: BoxFit.contain,
             ),
-            secondChild: Image.asset(
-              _getStarsNdPath(),
-              width: MediaQuery.of(context).size.width * 0.7,
-            ),
-            crossFadeState: _showSecondImage
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-          )),
+          ),
         Positioned(
           bottom: 40,
           child: Row(
@@ -76,13 +100,15 @@ class _ResultWidgetLottieState extends State<ResultWidgetLottie> {
                 imagePath: 'assets/images/result/exit.png',
                 onPressed: widget.onButton1Pressed,
               ),
+              const SizedBox(width: 20),
               _AnimatedButton(
                 imagePath: 'assets/images/result/next_yellow.png',
                 onPressed: widget.onButton2Pressed,
               ),
+              const SizedBox(width: 20),
               _AnimatedButton(
                 imagePath: 'assets/images/result/replay_yellow.png',
-                onPressed: widget.onButton2Pressed,
+                onPressed: widget.onButton3Pressed,
               ),
             ],
           ),
@@ -118,6 +144,7 @@ class _AnimatedButtonState extends State<_AnimatedButton>
       lowerBound: 0.9,
       upperBound: 1.0,
     );
+    _controller.forward();
   }
 
   void _onTapDown(TapDownDetails details) => _controller.reverse();
@@ -134,7 +161,7 @@ class _AnimatedButtonState extends State<_AnimatedButton>
       },
       onTapCancel: _onTapCancel,
       child: ScaleTransition(
-        scale: _controller..forward(),
+        scale: _controller,
         child: Image.asset(
           widget.imagePath,
           width: 120,

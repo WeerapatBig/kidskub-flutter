@@ -8,6 +8,7 @@ import 'package:firstly/screens_chapter4/model/time_progressbar.dart';
 import 'package:firstly/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
+import 'package:lottie/lottie.dart';
 import '../widgets/result_widget.dart';
 import 'levels/levels_data.dart';
 import 'logic/game_color_logic.dart';
@@ -28,7 +29,7 @@ class GameColorHardScreen extends StatefulWidget {
 
 class _GameColorHardScreenState extends State<GameColorHardScreen> {
   static ColorGame? _game;
-  late Level levelData;
+  late Level levelData = level2;
   final prefsService = SharedPrefsService();
   static Future<void>? _gameLoaded; // เก็บ Future ที่โหลดเกมไว้
 
@@ -52,8 +53,8 @@ class _GameColorHardScreenState extends State<GameColorHardScreen> {
     super.initState();
     // ตรวจสอบว่า _gameLoaded เป็น null ไหม ถ้าเป็น null แสดงว่ายังไม่เคยโหลด
 
+    levelData = level2;
     if (_gameLoaded == null) {
-      levelData = level2;
       // สร้างเกมด้วย level1
       _game = ColorGameHard(
         levelData,
@@ -109,18 +110,16 @@ class _GameColorHardScreenState extends State<GameColorHardScreen> {
   }
 
   void onAnswerEachColorIndex(int index, bool isCorrect) {
-    Future.microtask(() {
+    if (!mounted) return; // เพิ่มกันไว้ก่อน
+    setState(() {
       if (isCorrect) {
         targetColorResults[index] = AnswerResult.correct;
-        // กรณีอยากค้าง => ไม่เซต timer ลบ
       } else {
         if (targetColorResults[index] != AnswerResult.correct) {
           targetColorResults[index] = AnswerResult.wrong;
-          // ตั้ง Timer 1 วิ ให้กลับเป็น null (ลบภาพ)
           Future.delayed(const Duration(seconds: 1), () {
             if (!mounted) return;
             setState(() {
-              // รีเซตเฉพาะถ้าไม่ได้ถูกมาก่อน
               if (targetColorResults[index] != AnswerResult.correct) {
                 targetColorResults[index] = null;
               }
@@ -171,7 +170,7 @@ class _GameColorHardScreenState extends State<GameColorHardScreen> {
     await prefsService.saveLevelData('Color Hard', _starCount, 'yellow', true);
 
 // ปลดล็อคด่านถัดไป
-    await prefsService.updateLevelUnlockStatus('Color Hard', '');
+    await prefsService.updateLevelUnlockStatus('Color Hard', 'Color Quiz');
 
     // ตรวจสอบข้อมูลที่บันทึก
     final result = await prefsService.loadLevelData('Color Hard');
@@ -408,8 +407,9 @@ class _GameColorHardScreenState extends State<GameColorHardScreen> {
                     ],
                   ),
                   padding: const EdgeInsets.all(10),
-                  child: Image.asset(
-                    'assets/images/shapegame/tutorial_shape_easy.gif', // แก้รูปภาพการสอน
+                  child: Lottie.asset(
+                    'assets/lottie/color_lottie/color_easy_hard.json', // ก็คือ path ของไฟล์ .json
+                    width: MediaQuery.of(context).size.width * 0.5,
                     fit: BoxFit.contain,
                   ),
                 ),

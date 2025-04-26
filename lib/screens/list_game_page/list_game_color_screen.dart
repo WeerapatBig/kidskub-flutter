@@ -39,7 +39,7 @@ class _ListGameColorScreenState extends State<ListGameColorScreen>
               fit: BoxFit.cover,
             ),
           ),
-          //...buildFloatingImages(context),
+          ...buildFloatingImages(context),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -95,14 +95,15 @@ class _ListGameColorScreenState extends State<ListGameColorScreen>
   }
 
   List<Widget> buildFloatingImages(BuildContext context) {
-    double floatingImageSize = MediaQuery.of(context).size.width * 0.25;
+    double floatingImageSize =
+        MediaQuery.of(context).size.width * 0.25.toDouble();
 
     // List ของรูปภาพที่ต้องการใช้
     List<String> imagePaths = [
-      'assets/images/shapegame/elm_1.png',
-      'assets/images/shapegame/elm_2.png',
-      'assets/images/shapegame/elm_3.png',
-      'assets/images/shapegame/elm_4.png',
+      'assets/images/colorgame/quiz_color/elm_blue.png',
+      'assets/images/colorgame/quiz_color/elm_green.png',
+      'assets/images/colorgame/quiz_color/elm_red.png',
+      'assets/images/colorgame/quiz_color/elm_yellow.png',
     ];
 
     return List.generate(4, (index) {

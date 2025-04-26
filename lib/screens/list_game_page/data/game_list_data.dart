@@ -10,6 +10,7 @@ import 'package:firstly/screens_chapter3/screen_game_shape_hard.dart';
 import 'package:firstly/screens_chapter3/shape_quiz/screen/screen_game_shape_quiz.dart';
 import 'package:firstly/screens_chapter4/game_color_easy.dart';
 import 'package:firstly/screens_chapter4/game_color_hard.dart';
+import 'package:firstly/screens_chapter4/quiz_color/game_color_quiz_screen/game_color_quiz_intro_screen.dart';
 import 'package:firstly/widgets/stickerbook_page/widget/next_game_color_test.dart';
 import 'package:firstly/widgets/stickerbook_page/widget/next_game_test.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ final List<ListGameData> dotGameLevels = [
     isUnlocked: false,
     lockedImagePath: 'assets/images/dotchapter/card_lock.png',
     unlockedImagePath: 'assets/images/dotchapter/quiz_card_unlock.png',
-    maxStars: 3,
+    maxStars: 1,
     earnedStars: 0,
     starColor: 'purple',
     stickerName: 'sticker4',
@@ -144,7 +145,7 @@ final List<ListGameData> lineGameLevels = [
     isUnlocked: false,
     lockedImagePath: 'assets/images/linegamelist/card_lock.png',
     unlockedImagePath: 'assets/images/linegamelist/quiz_card_unlock.png',
-    maxStars: 3,
+    maxStars: 1,
     earnedStars: 0,
     starColor: 'purple',
     stickerName: 'stickerLine4',
@@ -195,7 +196,7 @@ final List<ListGameData> shapeGameLevels = [
     isUnlocked: false,
     lockedImagePath: 'assets/images/shapegame/card_lock.png',
     unlockedImagePath: 'assets/images/shapegame/quiz_card_unlock.png',
-    maxStars: 3,
+    maxStars: 1,
     earnedStars: 0,
     starColor: 'purple',
     stickerName: 'stickerShape4',
@@ -246,11 +247,11 @@ final List<ListGameData> colorGameLevels = [
     isUnlocked: false,
     lockedImagePath: 'assets/images/colorgame/card_lock.png',
     unlockedImagePath: 'assets/images/colorgame/quiz_card_unlock.png',
-    maxStars: 3,
+    maxStars: 1,
     earnedStars: 0,
     starColor: 'purple',
     stickerName: 'stickerColor4',
-    page: const QuizLineGame(),
+    page: const GameColorQuizIntroScreen(),
     warningImagePath: imagePathForWarningColor,
   ),
 ];

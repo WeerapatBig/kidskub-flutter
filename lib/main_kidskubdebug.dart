@@ -52,7 +52,7 @@ class DesignQuestApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.kodchasanTextTheme(),
       ),
-      initialRoute: '/strickerbook',
+      initialRoute: '/result_lottie',
       onGenerateRoute: _generateRoute,
     );
   }
@@ -85,14 +85,14 @@ Route<dynamic>? _generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => GameColorEasyScreen());
     case '/game_color_quiz_intro_screen':
       return MaterialPageRoute(builder: (_) => GameColorQuizIntroScreen());
-    case '/result_lottie.dart':
+    case '/result_lottie':
       return MaterialPageRoute(
           builder: (_) => ResultWidgetLottie(
                 onLevelComplete: true,
-                starsEarned: 0,
+                starsEarned: 1,
                 onButton1Pressed: () {},
                 onButton2Pressed: () {},
-                imagePath: 'dot',
+                onButton3Pressed: () {},
               ));
     case '/game_color_hard':
       return MaterialPageRoute(builder: (_) => const GameColorHardScreen());
