@@ -1,11 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.9.10' // ระบุเวอร์ชัน Kotlin ที่ต้องการใช้
+    ext.kotlin_version = '1.9.22' // ระบุเวอร์ชัน Kotlin ที่ต้องการใช้
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:8.1.2" // ระบุเวอร์ชัน Gradle ที่ต้องการ
+        classpath "com.android.tools.build:gradle:8.4.0" // ระบุเวอร์ชัน Gradle ที่ต้องการ
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -20,9 +20,7 @@ allprojects {
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(":app")
+    evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:firstly/function/mediaquery_values.dart';
 import 'package:firstly/widgets/stickerbook_page/widget/back_button.dart';
 import 'package:firstly/widgets/stickerbook_page/widget/background_widget.dart';
@@ -80,6 +79,10 @@ class _StickerBookPageState extends State<StickerBookPage> {
                   controller: _pageController,
                   itemCount: _chapters.length,
                   onPageChanged: (index) {
+                    // กระโดดทันทีไปยังหน้านั้น เพื่อ cancel animation
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _pageController.jumpToPage(index); // ยกเลิกแอนิเมชัน
+                    });
                     setState(() {
                       _currentPage = index;
                     });
@@ -90,52 +93,29 @@ class _StickerBookPageState extends State<StickerBookPage> {
 
                     return Stack(
                       children: [
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 600),
-                          transitionBuilder: (child, animation) {
-                            final flipAnim =
-                                Tween(begin: pi, end: 0.0).animate(animation);
-                            return AnimatedBuilder(
-                              animation: flipAnim,
-                              builder: (context, child) {
-                                final isUnder = (flipAnim.value > pi / 2);
-                                final transform = Matrix4.identity()
-                                  ..setEntry(3, 2, 0.001)
-                                  ..rotateY(flipAnim.value);
-                                return Transform(
-                                  transform: transform,
-                                  alignment: Alignment.center,
-                                  child: child,
-                                );
-                              },
-                              child: child,
-                            );
-                          },
-                          child: Row(
-                            key: ValueKey<String>(chapter),
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(170, 0, 0, 50),
-                                  child: BookSideWidget(
-                                    bookImage: data.bookLeftImage,
-                                    stickers: data.leftStickers,
-                                  ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(170, 0, 0, 50),
+                                child: BookSideWidget(
+                                  bookImage: data.bookLeftImage,
+                                  stickers: data.leftStickers,
                                 ),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 170, 50),
-                                  child: BookSideWidget(
-                                    bookImage: data.bookRightImage,
-                                    stickers: data.rightStickers,
-                                  ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 0, 170, 50),
+                                child: BookSideWidget(
+                                  bookImage: data.bookRightImage,
+                                  stickers: data.rightStickers,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         const Positioned(
                           top: -20,
@@ -155,39 +135,48 @@ class _StickerBookPageState extends State<StickerBookPage> {
           ),
           Positioned(
             top: context.screenHeight * 0.22,
-            left: context.screenWidth * 0.15,
+            left: context.screenWidth * 0.185,
             child: Opacity(
               opacity: 0.0, // ทำให้มองไม่เห็น แต่ยังแตะได้
               child: Row(
                 children: List.generate(_chapters.length, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    child: GestureDetector(
-                      onTap: () {
-                        _pageController.animateToPage(
-                          index,
-                          duration: const Duration(milliseconds: 600),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                      child: Container(
-                        width: 120,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: index == _currentPage
-                              ? Colors.amber.shade400
-                              : Colors.grey.shade400,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
+                  final List<Widget> widgets = [];
+                  // เพิ่มปุ่ม
+                  widgets.add(Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: _chapterButton(index),
+                  ));
+                  if (index == 1) {
+                    widgets.add(const SizedBox(width: 95));
+                  }
+                  return widgets;
+                }).expand((widgetList) => widgetList).toList(),
               ),
             ),
           ),
           buildBackButton(context),
         ],
+      ),
+    );
+  }
+
+  Widget _chapterButton(int index) {
+    return GestureDetector(
+      onTap: () {
+        _pageController.jumpToPage(index);
+        setState(() {
+          _currentPage = index;
+        });
+      },
+      child: Container(
+        width: 150,
+        height: 50,
+        decoration: BoxDecoration(
+          color: index == _currentPage
+              ? Colors.amber.shade400
+              : Colors.grey.shade400,
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
     );
   }

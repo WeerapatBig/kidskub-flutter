@@ -56,6 +56,19 @@ class _DrawLineGameScreenState extends State<DrawLineGameScreen>
   @override
   void initState() {
     super.initState();
+
+    // รีเซ็ต currentLevelIndex ให้เริ่มที่ด่าน 0 ทุกครั้งที่เข้ามาใหม่
+    widget.game.currentLevelIndex.value = 0;
+    widget.game.targetIndex = 1;
+    widget.game.lines.clear(); // เผื่อกรณีเส้นค้าง
+
+    // โหลด hint ของเลเวลใหม่
+    widget.game.loadHintImagesForCurrentLevel();
+    widget.game.isHintActive = true;
+    async.Future.delayed(const Duration(milliseconds: 3500), () {
+      widget.game.isHintActive = false;
+    });
+
     widget.game.onUpdateUI = () {
       setState(() {}); // อัปเดต UI
     };

@@ -46,13 +46,13 @@ class BackgroundAudioManager with WidgetsBindingObserver {
       'assets/soundeffect/button_back.mp3',
       'assets/soundeffect/chapter_lock.mp3',
       'assets/soundeffect/cut_fruit.mp3',
-      'assets/soundeffect/CuttingMelonSound.mp3'
-          'assets/soundeffect/collect.mp3',
+      'assets/soundeffect/CuttingMelonSound.mp3',
+      'assets/soundeffect/collect.mp3',
       'assets/soundeffect/openstickerbook.mp3',
       'assets/soundeffect/three_stars.mp3',
       'assets/soundeffect/HintButtonSound.mp3',
-      'assets/soundeffect/closeHintButtonSound.mp3'
-          'assets/soundeffect/lineCorrectAnswer.mp3',
+      'assets/soundeffect/closeHintButtonSound.mp3',
+      'assets/soundeffect/lineCorrectAnswer.mp3',
       'assets/soundeffect/drawingPopSound.mp3',
       'assets/soundeffect/selectLineSound.mp3',
       'assets/soundeffect/lineHintButtonSound.mp3',
@@ -75,17 +75,19 @@ class BackgroundAudioManager with WidgetsBindingObserver {
       'assets/soundeffect/hitCorner2.mp3',
     ];
 
-    for (var asset in soundEffectAssets) {
-      try {
-        AudioPlayer controller = AudioPlayer();
-        await controller.setAsset(asset);
-        controller.setVolume(_soundEffectVolume);
-        soundEffectControllers[asset] = controller;
-        print('Successfully preloaded: $asset');
-      } catch (e) {
-        print('Failed to preload $asset: $e');
-      }
-    }
+    await Future.wait(
+      soundEffectAssets.map((asset) async {
+        try {
+          final player = AudioPlayer();
+          await player.setAsset(asset);
+          player.setVolume(_soundEffectVolume);
+          soundEffectControllers[asset] = player;
+          print('✅ Preloaded: $asset');
+        } catch (e) {
+          print('❌ Failed to preload $asset: $e');
+        }
+      }),
+    );
   }
 
   void playButtonClickSound() {
