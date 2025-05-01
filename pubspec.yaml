@@ -118,6 +118,7 @@ flutter:
   - assets/images/game_list/warning_unlock_dot.png
   - assets/images/game_list/warning_unlock_line.png
   - assets/images/game_list/warning_unlock_shape.png
+  - assets/images/game_list/warning_unlock_color.png
 
   - assets/images/strickerbook/book1_left.png
   - assets/images/strickerbook/book1_right.png
@@ -378,6 +379,7 @@ flutter:
   - assets/images/linegamelist/line_quiz/active_check_button.png
 
   - assets/images/shapegame/tutorial_shape_easy.gif
+  - assets/images/shapegame/tutorial_shape_quiz.gif
   - assets/images/shapegame/BG_shape_game.png
   - assets/images/shapegame/grid_green.png
   - assets/images/shapegame/check.png
@@ -477,8 +479,19 @@ flutter:
   - assets/images/shapegame/quiz_shape/silhouette_2.png
   - assets/images/shapegame/quiz_shape/silhouette_3.png
   - assets/images/shapegame/quiz_shape/silhouette_4.png
+  
+  - assets/images/minigameShape/character.png
+  - assets/images/minigameShape/circle.png
+  - assets/images/minigameShape/miniGameShapebackground.png
+  - assets/images/minigameShape/shape_box.png
+  - assets/images/minigameShape/square.png
+  - assets/images/minigameShape/target_circle.png
+  - assets/images/minigameShape/target_square.png
+  - assets/images/minigameShape/target_triangle.png
+  - assets/images/minigameShape/triangle.png
 
   - assets/images/colorgame/grid_bg_color.png
+  - assets/images/colorgame/tutorial_color.gif
   - assets/images/colorgame/quiz_card_unlock.png
   - assets/images/colorgame/card_lock.png
   - assets/images/colorgame/card_comic.png
@@ -601,6 +614,21 @@ flutter:
   - assets/motion/lineComp_4.mp4
   - assets/motion/lineComp_5.mp4
 
+  - assets/motion/shape_1.mp4
+  - assets/motion/shape_2.mp4
+  - assets/motion/shape_3.mp4
+  - assets/motion/shape_4.mp4
+  - assets/motion/shape_5.mp4
+
+  - assets/motion/color_1.mp4
+  - assets/motion/color_2.mp4
+  - assets/motion/color_3.mp4
+  - assets/motion/color_4.mp4
+  - assets/motion/color_5.mp4
+  - assets/motion/color_6.mp4
+  - assets/motion/color_7.mp4
+  - assets/motion/color_8.mp4
+
   - assets/images/setting/bar.png
   - assets/images/setting/button_minus.png
   - assets/images/setting/button_plus.png
@@ -613,7 +641,10 @@ flutter:
   - assets/images/homepage/hold_on_button.png
 
   
+  - assets/music/
   - assets/music/background_music.mp3
+
+  - assets/soundeffect/
   - assets/soundeffect/touch_screen.mp3
   - assets/soundeffect/three_stars.mp3
   - assets/soundeffect/button_click.mp3

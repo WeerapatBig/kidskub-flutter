@@ -5,15 +5,9 @@ import 'package:firstly/widgets/result_widget_quiz.dart';
 //import 'package:firstly/function/progressbar_dothard.dart';
 //import 'package:firstly/function/result_widget.dart';
 import 'package:firstly/widgets/showsticker.dart';
-import 'package:firstly/screens/game_backup/colorgame_easy.dart';
-import 'package:firstly/screens/game_backup/colorgamehard.dart';
 import 'package:firstly/screens_chapter1/dotgamehard.dart';
-import 'package:firstly/screens/dot_game_list_old/dotgamelist_old.dart';
-import 'package:firstly/screens/game_backup/gameline2.dart';
-import 'package:firstly/screens/gamelinehard.dart';
 import 'package:firstly/screens/gameselectionpage.dart';
 import 'package:firstly/screens/homepage.dart';
-import 'package:firstly/screens/linegamelist.dart';
 import 'package:firstly/screens_chapter1/motionlevel1.dart';
 import 'package:firstly/screens_chapter1/quizgamedot.dart';
 import 'package:firstly/screens_chapter2/line_game_hard_screen.dart';
@@ -64,14 +58,8 @@ class DesignQuestApp extends StatelessWidget {
             // starColor: 'yellow',
             // earnedStars: 0,
             ),
-        '/gameline-2': (context) => const GameLine2(), // Example of "เกมเส้น"
         '/dotgamehard': (context) => const DotGameHard(),
-        '/colorgamehard': (context) => const ColorGameHard(),
         '/quizgamedot': (context) => const DotQuizGame(),
-        '/colorgame_easy': (context) => const GameColorEasyScreen(),
-        '/gamelinehard': (context) => const LineGameHard(),
-        '/dotgamelist': (context) => const DotGameList(),
-        '/linegamelist': (context) => const LineGameList(),
         '/result_widget_quiz': (context) => ResultWidgetQuiz(
               onLevelComplete: true,
               starsEarned: 0,

@@ -40,7 +40,7 @@ android {
             dimension "mode"
             applicationIdSuffix ".full"
             versionNameSuffix "-full"
-            resValue "string", "app_name", "Full Game"
+            resValue "string", "app_name", "KidsKub"
         }
         kidsKubDebug {
             dimension "mode"

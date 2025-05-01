@@ -40,6 +40,7 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
   bool showTutorial = false;
   bool showResult = false;
   bool isWin = false;
+  bool _isStartingNewGame = false;
 
   // เพิ่มตัวแปรสำหรับ Widget "3 2 1 Go"
   bool showCountdown = false;
@@ -74,6 +75,51 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
 
   /// ฟังก์ชันเริ่ม Flow เกมใหม่
   void _startGameFlow() {
+    _isStartingNewGame = true; // 💡 ตั้งธงว่ากำลังเริ่มเกมใหม่
+    _startNewGameFlow();
+  }
+
+  /// (B) เมื่อปิด Tutorial -> เริ่ม Countdown
+  void _onCloseTutorial() {
+    setState(() {
+      showTutorial = false;
+    });
+
+    if (_isStartingNewGame) {
+      showCountdown = true;
+      _startCountDown(); // ✅ เฉพาะตอนเริ่มเกมเท่านั้นที่มี Countdown
+      _isStartingNewGame = false; // รีเซ็ตธง
+    } else {
+      _resumeTimer(); // ✅ ถ้าเป็นแค่การ pause แล้ว resume ธรรมดา
+    }
+  }
+
+  /// (C) ฟังก์ชันเริ่มนับถอยหลัง 3..2..1..Go
+  /// พอจบ -> initLevel(0)
+  void _startCountDown() {
+    // รีเซ็ตค่าตัวเลข
+    _currentCountdown = 3;
+
+    // เริ่มจับเวลานับถอยหลัง
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_currentCountdown > 0) {
+        _countdownAnimationController.forward(from: 0.0);
+        setState(() {
+          _currentCountdown--;
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          showCountdown = false;
+        });
+        // เมื่อจบ countdown -> เริ่มเลเวลแรก
+        _initLevel(_currentLevelIndex);
+        _startTimer(); // เริ่มจับเวลา
+      }
+    });
+  }
+
+  void _startNewGameFlow() {
     setState(() {
       // เคลียร์ตัวแปรต่าง ๆ
       _timer?.cancel();
@@ -97,37 +143,12 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
     });
   }
 
-  /// (B) เมื่อปิด Tutorial -> เริ่ม Countdown
-  void _onCloseTutorial() {
-    setState(() {
-      showTutorial = false;
-      showCountdown = true;
-    });
-    _startCountDown();
+  void _pauseTimer() {
+    _timer?.cancel();
   }
 
-  /// (C) ฟังก์ชันเริ่มนับถอยหลัง 3..2..1..Go
-  /// พอจบ -> initLevel(0)
-  void _startCountDown() {
-    // รีเซ็ตค่าตัวเลข
-    _currentCountdown = 3;
-
-    // เริ่มจับเวลานับถอยหลัง
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_currentCountdown > 0) {
-        _countdownAnimationController.forward(from: 0.0);
-        setState(() {
-          _currentCountdown--;
-        });
-      } else {
-        timer.cancel();
-        setState(() {
-          showCountdown = false;
-        });
-        // เมื่อจบ countdown -> เริ่มเลเวลแรก
-        _initLevel(0);
-      }
-    });
+  void _resumeTimer() {
+    _startTimer();
   }
 
   /// เริ่มเลเวลตาม index
@@ -186,6 +207,8 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
 
           showStarCongrate = true;
 
+          _pauseTimer();
+
           // รอ 1 วินาทีก่อนเคลียร์
           Future.delayed(const Duration(milliseconds: 2500), () {
             setState(() {
@@ -220,6 +243,7 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
       _buttonStates.clear(); // เคลียร์ทุกปุ่มให้กดได้อีกครั้ง
       _currentLevelIndex++;
       _initLevel(_currentLevelIndex);
+      _resumeTimer();
     });
   }
 
@@ -241,12 +265,6 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
     final screenW = context.screenWidth;
     final screenH = context.screenHeight;
 
-    //int levelIndex = _currentLevelIndex;
-    // กำหนดสูตรคำนวณความเร็ว
-    //const int baseSpeed = 250;
-    //const int incrementPerLevel = 200;
-
-    // สร้าง List สักอันเพื่อเก็บ Widget ของ Silhouette
     List<Widget> silhouetteWidgets = [];
 
     for (int i = 0; i < _gameController.currentSilhouettes.length; i++) {
@@ -261,15 +279,6 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
       if (random.nextBool()) vx = -vx;
       if (random.nextBool()) vy = -vy;
 
-      // คำนวณความเร็วตามเลเวล
-      //int speedForThisLevel = baseSpeed + (incrementPerLevel * levelIndex);
-
-      // เอามาใช้ทั้ง vx, vy
-      // หรือถ้าต้องการ random ก็สุ่มสักนิด
-      //double vx = speedForThisLevel.toDouble();
-      //double vy = speedForThisLevel.toDouble();
-
-      // สร้าง widget BouncingRotatingSilhouetteItem (ตัวอย่างว่าหมุนด้วย)
       silhouetteWidgets.add(
         SilhouetteItem(
           gameController: _gameController,
@@ -464,12 +473,11 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
     // Widget สำหรับแสดง Tutorial
     return GestureDetector(
       onTap: () {
-        // (B) เมื่อผู้ใช้ปิด Tutorial -> เริ่ม Countdown
         _onCloseTutorial();
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 1,
-        color: Colors.black.withOpacity(0.6), // พื้นหลังโปร่งแสง
+        color: Colors.black.withOpacity(0.6),
         child: Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.5,
@@ -599,7 +607,8 @@ class _GameShapeEasyScreenState extends State<GameShapeEasyScreen>
             child: CustomButton(
               onTap: () {
                 setState(() {
-                  showTutorial = true; // เปิด TutorialWidget
+                  _pauseTimer(); // เพิ่มมา หยุดเวลาตอนเปิด Tutorial
+                  showTutorial = true;
                 });
               },
               child: Image.asset(

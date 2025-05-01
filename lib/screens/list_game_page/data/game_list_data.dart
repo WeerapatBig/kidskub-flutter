@@ -5,14 +5,14 @@ import 'package:firstly/screens_chapter2/line_game_hard_screen.dart';
 import 'package:firstly/screens_chapter2/line_game_motion.dart';
 import 'package:firstly/screens_chapter2/line_game_quiz.dart';
 import 'package:firstly/screens_chapter2/line_game_easy.dart';
+import 'package:firstly/screens_chapter3/motionChapterShape.dart';
 import 'package:firstly/screens_chapter3/screen_game_shape_easy.dart';
 import 'package:firstly/screens_chapter3/screen_game_shape_hard.dart';
 import 'package:firstly/screens_chapter3/shape_quiz/screen/screen_game_shape_quiz.dart';
 import 'package:firstly/screens_chapter4/game_color_easy.dart';
 import 'package:firstly/screens_chapter4/game_color_hard.dart';
+import 'package:firstly/screens_chapter4/motionChapterColor.dart';
 import 'package:firstly/screens_chapter4/quiz_color/game_color_quiz_screen/game_color_quiz_intro_screen.dart';
-import 'package:firstly/widgets/stickerbook_page/widget/next_game_color_test.dart';
-import 'package:firstly/widgets/stickerbook_page/widget/next_game_test.dart';
 import 'package:flutter/material.dart';
 
 import '../../../screens_chapter1/dotgameeasy.dart';
@@ -164,7 +164,7 @@ final List<ListGameData> shapeGameLevels = [
     earnedStars: 0,
     starColor: '',
     stickerName: 'stickerShape1',
-    page: const PageShapeMotionTest(),
+    page: const MotionChapterShape(),
     warningImagePath: imagePathForWarningShape,
   ),
   ListGameData(
@@ -215,7 +215,7 @@ final List<ListGameData> colorGameLevels = [
     earnedStars: 0,
     starColor: '',
     stickerName: 'stickerColor1',
-    page: const PageColorMotionTest(),
+    page: const MotionChapterColor(),
     warningImagePath: imagePathForWarningColor,
   ),
   ListGameData(

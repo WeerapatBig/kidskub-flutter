@@ -16,6 +16,8 @@ class _TimeAlertImageState extends State<TimeAlertImage>
   late Animation<double> _leftScale;
   late Animation<double> _rightScale;
 
+  bool _isDisposed = false; // ✅ เพิ่มตัวแปร flag
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +52,8 @@ class _TimeAlertImageState extends State<TimeAlertImage>
       await _rightController.forward(from: 0);
       // 3. พัก 0.5 วินาที
       await Future.delayed(const Duration(milliseconds: 500));
+
+      if (_isDisposed) return; // ✅ หยุดทันทีหากถูก dispose
       // 4. รีเซ็ตเพื่อเริ่มรอบใหม่
       _leftController.reset();
       _rightController.reset();
@@ -58,6 +62,8 @@ class _TimeAlertImageState extends State<TimeAlertImage>
 
   @override
   void dispose() {
+    _isDisposed = true; // ✅ ติด flag ว่าถูก dispose แล้ว
+
     _leftController.dispose();
     _rightController.dispose();
     super.dispose();

@@ -5,6 +5,8 @@ import 'package:video_player/video_player.dart';
 import '../screens/shared_prefs_service.dart';
 
 class MotionLevel1 extends StatefulWidget {
+  const MotionLevel1({super.key});
+
   @override
   _MotionLevel1State createState() => _MotionLevel1State();
 }
@@ -76,16 +78,39 @@ class _MotionLevel1State extends State<MotionLevel1>
     }
 
     // สร้าง controller ใหม่
-    _controller = VideoPlayerController.asset(_videoPaths[_currentVideoIndex])
-      ..initialize().then((_) {
-        if (mounted) {
-          setState(() {
-            _showNextText = false;
-          });
-          _controller!.setVolume(1.0);
-          _controller!.play();
-        }
-      });
+    final controller = VideoPlayerController.asset(
+      _videoPaths[_currentVideoIndex],
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    );
+    setState(() {
+      _controller = controller;
+    });
+
+    try {
+      await controller.initialize();
+      if (mounted) {
+        setState(() {
+          _showNextText = false;
+        });
+        controller.setVolume(1.0);
+
+        controller.addListener(() {
+          final value = controller.value;
+          if (value.isInitialized) {
+            print(
+                'Video Status --> Position: ${value.position} / ${value.duration}');
+            print('IsPlaying: ${value.isPlaying}');
+            print('HasError: ${value.hasError}');
+            if (value.hasError) {
+              print('ErrorDescription: ${value.errorDescription}');
+            }
+          }
+        });
+        await controller.play(); // 🔥 ใช้ await play() ด้วย
+      }
+    } catch (e) {
+      print('Video initialize error: $e');
+    }
 
     _controller!.addListener(() {
       if (mounted && _controller!.value.isInitialized) {
@@ -111,9 +136,7 @@ class _MotionLevel1State extends State<MotionLevel1>
   Future<void> _playNextVideo() async {
     if (_currentVideoIndex < _videoPaths.length - 1) {
       await _controller?.pause(); // หยุดวิดีโอปัจจุบัน
-      VideoPlayerController? oldController = _controller;
-
-      await oldController?.dispose(); // กำจัด controller เก่า
+      await _controller?.dispose();
       setState(() {
         _currentVideoIndex++;
         _showNextText = false;
@@ -154,15 +177,9 @@ class _MotionLevel1State extends State<MotionLevel1>
 
   @override
   void dispose() {
-    if (_controller != null && _controller!.value.isInitialized) {
-      _controller!.dispose();
-    }
-    if (_textAnimationController.isAnimating) {
-      _textAnimationController.dispose();
-    }
-    if (_buttonAnimationController.isAnimating) {
-      _buttonAnimationController.dispose();
-    }
+    _controller?.dispose(); // ✅ ย่อให้ปลอดภัย
+    _textAnimationController.dispose();
+    _buttonAnimationController.dispose();
     super.dispose();
   }
 

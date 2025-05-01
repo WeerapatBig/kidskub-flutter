@@ -316,7 +316,7 @@ class _ScreenGameShapeQuizState extends State<ScreenGameShapeQuiz> {
                   ),
                   padding: const EdgeInsets.all(10),
                   child: Image.asset(
-                    'assets/images/linegamelist/line_quiz/tutorial_quiz.png', // แก้รูปภาพการสอน
+                    'assets/images/shapegame/tutorial_shape_quiz.gif', // แก้รูปภาพการสอน
                     fit: BoxFit.contain,
                   ),
                 ),

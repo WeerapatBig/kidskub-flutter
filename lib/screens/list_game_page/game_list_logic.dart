@@ -1,6 +1,7 @@
 // lib\screens\list_game_page\game_list_logic.dart
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import '../../function/background_audio_manager.dart';
 import '../../widgets/showkey.dart';
 import '../../widgets/showsticker.dart';
 import '../../widgets/stickerbook_page/services/sticker_prefs_service.dart';
@@ -14,10 +15,12 @@ bool _isWarningVisible = false;
 Future<void> onLevelTap(
     BuildContext context, ListGameData levelData, TickerProvider ticker) async {
   if (levelData.isUnlocked) {
+    BackgroundAudioManager().pauseBackgroundMusic();
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => levelData.page),
     ).then((_) async {
+      BackgroundAudioManager().playBackgroundMusic();
       // เมื่อกลับมาจากหน้าเกม, โหลดข้อมูลใหม่เพื่ออัพเดท UI
       final levelDataFromPrefs =
           await prefsService.loadLevelData(levelData.title);
@@ -29,8 +32,11 @@ Future<void> onLevelTap(
       final String? stickerKey = levelData.stickerName;
 
       // เช็คว่าสติ๊กเกอร์นี้ถูกเก็บแล้วหรือยัง
-      final bool isStickerCollected =
-          await StickerBookPrefsService.loadIsCollected(stickerKey);
+      bool isStickerCollected = false;
+      if (stickerKey != null) {
+        isStickerCollected =
+            await StickerBookPrefsService.loadIsCollected(stickerKey);
+      }
 
 // ถ้ายังไม่เก็บและมี stickerKey ให้แสดง ShowStickerPage
       if (stickerKey != null && stickerKey.isNotEmpty && !isStickerCollected) {

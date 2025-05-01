@@ -6,6 +6,7 @@ class BackgroundAudioManager with WidgetsBindingObserver {
   static final BackgroundAudioManager _instance =
       BackgroundAudioManager._internal();
   factory BackgroundAudioManager() => _instance;
+  final bool _muteAllSounds = false;
 
   late AudioPlayer backgroundMusicController; // สำหรับ Background Music
   double _soundEffectVolume = 0.5; // ระดับเสียงเริ่มต้นของ Sound Effect
@@ -23,23 +24,24 @@ class BackgroundAudioManager with WidgetsBindingObserver {
   }
 
   Future<void> _initialize() async {
+    if (_muteAllSounds) return;
     try {
-      await backgroundMusicController
-          .setAsset('assets/music/background_music.mp3');
-      print('Background music loaded successfully');
-      backgroundMusicController.setLoopMode(LoopMode.one); // ตั้งให้วนลูป
-
-      // ตั้งระดับเสียงเริ่มต้น
-      backgroundMusicController.setVolume(0.2); // กำหนดเสียงเริ่มต้นเป็น 50%
-
-      await backgroundMusicController.play();
-      print('Background music started playing');
+      if (!backgroundMusicController.playing) {
+        // ✅ ถ้ายังไม่ได้เล่นอยู่
+        await backgroundMusicController
+            .setAsset('assets/music/background_music.mp3');
+        await backgroundMusicController.setLoopMode(LoopMode.one);
+        await backgroundMusicController.setVolume(0.2);
+        await backgroundMusicController.play();
+      }
     } catch (e) {
       print('Error initializing background music: $e');
+      await backgroundMusicController.stop();
     }
   }
 
   Future<void> _preloadSoundEffects() async {
+    if (!_muteAllSounds) return;
     List<String> soundEffectAssets = [
       'assets/soundeffect/button_click.mp3',
       'assets/soundeffect/touch_screen.mp3',

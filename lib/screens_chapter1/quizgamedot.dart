@@ -329,11 +329,11 @@ class _DotQuizGameState extends State<DotQuizGame>
       },
       onDragEnd: (details) {
         // หยุดเสียงเมื่อปล่อยลูกเต๋า
-        BackgroundAudioManager().stopDragDiceSound();
+        //BackgroundAudioManager().stopDragDiceSound();
       },
       onDragCompleted: () {
         // หยุดเสียงเมื่อวางสำเร็จ
-        BackgroundAudioManager().stopDragDiceSound();
+        //BackgroundAudioManager().stopDragDiceSound();
       },
       feedback: Transform.rotate(
         angle: 0.2,
@@ -354,7 +354,7 @@ class _DotQuizGameState extends State<DotQuizGame>
       child: GestureDetector(
         onTap: () {
           // เล่นเสียงคลิกเมื่อลูกเต๋าถูกแตะ
-          BackgroundAudioManager().playClickDiceSound();
+          BackgroundAudioManager().playClickDotSound();
         },
         child: Image.asset(
           'assets/images/quizdot/dice_$diceNumber.png',

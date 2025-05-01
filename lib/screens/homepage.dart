@@ -49,6 +49,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   final Duration _duration = const Duration(milliseconds: 100);
 
+  final BackgroundAudioManager backgroundAudioManager =
+      BackgroundAudioManager();
+
   // รายการของ Asset
   List<FloatingAsset> _assets = [];
   late Ticker _ticker;
@@ -244,22 +247,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (asset.position.dx < -screenSize.width / 2) {
       asset.position = Offset(-screenSize.width / 2, asset.position.dy);
       asset.velocity = Offset(-asset.velocity.dx, asset.velocity.dy);
-      BackgroundAudioManager().playHitCorner1Sound();
+      backgroundAudioManager.playHitCorner1Sound();
     }
     if (asset.position.dx > screenSize.width / 2) {
       asset.position = Offset(screenSize.width / 2, asset.position.dy);
       asset.velocity = Offset(-asset.velocity.dx, asset.velocity.dy);
-      BackgroundAudioManager().playHitCorner1Sound();
+      backgroundAudioManager.playHitCorner1Sound();
     }
     if (asset.position.dy < -screenSize.height / 2) {
       asset.position = Offset(asset.position.dx, -screenSize.height / 2);
       asset.velocity = Offset(asset.velocity.dx, -asset.velocity.dy);
-      BackgroundAudioManager().playHitCorner1Sound();
+      backgroundAudioManager.playHitCorner1Sound();
     }
     if (asset.position.dy > screenSize.height / 2) {
       asset.position = Offset(asset.position.dx, screenSize.height / 2);
       asset.velocity = Offset(asset.velocity.dx, -asset.velocity.dy);
-      BackgroundAudioManager().playHitCorner1Sound();
+      backgroundAudioManager.playHitCorner1Sound();
     }
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../function/background_audio_manager.dart';
+
 class CustomButton extends StatefulWidget {
   final VoidCallback? onTap;
   final Widget child;
@@ -33,6 +35,7 @@ class _CustomButtonState extends State<CustomButton> {
         setState(() {
           _isPressed = false;
         });
+        BackgroundAudioManager().playButtonClickSound();
         widget.onTap?.call(); // เรียกฟังก์ชันของปุ่มเมื่อปล่อยนิ้ว
       },
       onTapCancel: () {

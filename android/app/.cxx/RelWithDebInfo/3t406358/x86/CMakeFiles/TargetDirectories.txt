@@ -1,0 +1,2 @@
+D:/Dev/KidsKub/firstly/android/app/.cxx/RelWithDebInfo/3t406358/x86/CMakeFiles/edit_cache.dir
+D:/Dev/KidsKub/firstly/android/app/.cxx/RelWithDebInfo/3t406358/x86/CMakeFiles/rebuild_cache.dir

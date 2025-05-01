@@ -171,7 +171,7 @@ class _AccumulatedStarsWidgetState extends State<AccumulatedStarsWidget>
     //    (4 ช่วง × 0.06s)
     _sequenceController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 240),
+      duration: const Duration(milliseconds: 800),
     )..repeat();
 
     // 2) สร้าง TweenSequence ให้เอฟเฟกต์ scale 4 ช่วง

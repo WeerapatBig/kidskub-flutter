@@ -94,12 +94,10 @@ class _ListGameLineScreenState extends State<ListGameLineScreen>
   List<Widget> buildFloatingImages(BuildContext context) {
     double floatingImageSize = MediaQuery.of(context).size.width * 0.25;
     return List.generate(4, (index) {
-      return Positioned.fill(
-        child: FloatingImage(
-          imagePath: 'assets/images/line.png',
-          width: floatingImageSize,
-          height: floatingImageSize,
-        ),
+      return FloatingImage(
+        imagePath: 'assets/images/line.png',
+        width: floatingImageSize,
+        height: floatingImageSize,
       );
     });
   }

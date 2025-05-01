@@ -7,7 +7,6 @@ import 'package:firstly/screens_chapter4/model/time_progressbar.dart';
 import 'package:firstly/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
-import 'package:lottie/lottie.dart';
 import '../widgets/result_widget.dart';
 import 'levels/levels_data.dart';
 import 'logic/game_color_logic.dart';
@@ -395,17 +394,10 @@ class _GameColorEasyScreenState extends State<GameColorEasyScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0),
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
                   padding: const EdgeInsets.all(10),
-                  child: Lottie.asset(
-                    'assets/lottie/color_lottie/color_easy_hard.json', // ก็คือ path ของไฟล์ .json
+                  child: Image.asset(
+                    'assets/images/colorgame/tutorial_color.gif', // ก็คือ path ของไฟล์ .json
                     width: MediaQuery.of(context).size.width * 0.5,
                     fit: BoxFit.contain,
                   ),
@@ -416,6 +408,7 @@ class _GameColorEasyScreenState extends State<GameColorEasyScreen> {
                   style: TextStyle(
                     fontSize: 50,
                     color: Colors.white,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],

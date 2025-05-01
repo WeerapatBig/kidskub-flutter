@@ -175,9 +175,9 @@ abstract class BaseLevelWidgetState<T extends BaseLevelWidget>
 
     // เช็คระดับก่อนเล่นเสียง Hint Button
     if (widget is Level1Widget || widget is Level3Widget) {
-      BackgroundAudioManager().playHintButtonSound();
+      BackgroundAudioManager().playButtonClickSound();
     }
-    BackgroundAudioManager().pauseBackgroundMusic();
+    BackgroundAudioManager().stopAllSounds();
     _startFadeTimer();
     dashedLinesCrossed = List<bool>.filled(2, false);
   }
@@ -449,7 +449,7 @@ class _Level1WidgetState extends BaseLevelWidgetState<Level1Widget> {
           right: screenSize.width * 0.05,
           child: FloatingActionButton(
               onPressed: () {
-                BackgroundAudioManager().playHintButtonSound();
+                BackgroundAudioManager().playButtonClickSound();
                 setState(() {
                   showTutorial = true; // เปิด TutorialWidget
                 });
@@ -470,7 +470,7 @@ class _Level1WidgetState extends BaseLevelWidgetState<Level1Widget> {
   Widget _buildTutorialWidget() {
     return GestureDetector(
       onTap: () {
-        BackgroundAudioManager().playCloseHintButtonSound();
+        BackgroundAudioManager().playButtonClickSound();
         setState(() {
           showTutorial = false; // ปิดวิดเจ็ตเมื่อผู้ใช้คลิก
         });
@@ -841,8 +841,7 @@ class _Level3WidgetState extends State<Level3Widget> {
                       index < dots.length &&
                       _isWithinEllipse(droppedPosition)) {
                     // ✅ เล่นเสียงเมื่อนำ dot ไปวางบนจานสำเร็จ
-                    BackgroundAudioManager().playSoundEffect(
-                        'assets/soundeffect/melonSeedPlace.mp3');
+                    BackgroundAudioManager().playBackMelonSeedSound();
 
                     // คำนวณตำแหน่งใหม่ให้อยู่ในขอบเขตวงรี
                     final RenderBox renderBox = plateKey.currentContext!
@@ -927,7 +926,7 @@ class _Level3WidgetState extends State<Level3Widget> {
           right: screenSize.width * 0.05,
           child: FloatingActionButton(
               onPressed: () {
-                BackgroundAudioManager().playHintButtonSound();
+                BackgroundAudioManager().playButtonClickSound();
                 setState(() {
                   showTutorial = true; // เปิด TutorialWidget
                 });
@@ -958,11 +957,11 @@ class _Level3WidgetState extends State<Level3Widget> {
   }
 
   Widget _buildTutorialWidget() {
-    BackgroundAudioManager().playHintButtonSound();
+    BackgroundAudioManager().playButtonClickSound();
     return GestureDetector(
       onTap: () {
         setState(() {
-          BackgroundAudioManager().playCloseHintButtonSound();
+          BackgroundAudioManager().playButtonClickSound();
           showTutorial = false; // ปิดวิดเจ็ตเมื่อผู้ใช้คลิก
         });
       },

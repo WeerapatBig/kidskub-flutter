@@ -1,6 +1,5 @@
 import 'package:firstly/function/background_audio_manager.dart';
 import 'package:firstly/screens/homepage.dart';
-import 'package:firstly/screens/shared_prefs_service.dart';
 import 'package:firstly/screens_chapter1/dotgameeasy.dart';
 import 'package:firstly/screens_chapter1/dotgamehard.dart';
 import 'package:firstly/screens_chapter1/motionlevel1.dart';
@@ -8,7 +7,6 @@ import 'package:firstly/screens_chapter1/quizgamedot.dart';
 import 'package:firstly/screens_chapter2/line_game_quiz.dart';
 import 'package:firstly/screens_chapter2/line_game_easy.dart';
 import 'package:firstly/widgets/result_lottie.dart';
-import 'package:firstly/widgets/stickerbook_page/services/sticker_prefs_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,10 +22,6 @@ import 'widgets/stickerbook_page/strickerbook.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // โหลด SharedPreferences ล่วงหน้าเพื่อลดเวลาโหลด
-  await SharedPrefsService().clearAllPreferences();
-  await StickerBookPrefsService().clearAllPreferences();
 
   // จัดการ Background Audio ให้โหลดครั้งเดียว
   BackgroundAudioManager();
@@ -52,7 +46,7 @@ class DesignQuestApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.kodchasanTextTheme(),
       ),
-      initialRoute: '/result_lottie',
+      initialRoute: '/',
       onGenerateRoute: _generateRoute,
     );
   }

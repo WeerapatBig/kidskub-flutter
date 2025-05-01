@@ -93,12 +93,10 @@ class _ListGameDotScreenState extends State<ListGameDotScreen>
   List<Widget> buildFloatingImages(BuildContext context) {
     double floatingImageSize = MediaQuery.of(context).size.width * 0.15;
     return List.generate(4, (index) {
-      return Positioned.fill(
-        child: FloatingImage(
-          imagePath: 'assets/images/dotchapter/elm.png',
-          width: floatingImageSize,
-          height: floatingImageSize,
-        ),
+      return FloatingImage(
+        imagePath: 'assets/images/dotchapter/elm.png',
+        width: floatingImageSize,
+        height: floatingImageSize,
       );
     });
   }

@@ -212,8 +212,7 @@ class _GameSettingsDialogState extends State<GameSettingsDialog> {
                       onDecrease: () {
                         setState(() {
                           // เล่นเสียงเอฟเฟกต์เพื่อให้ผู้ใช้ได้ยินการเปลี่ยนแปลง
-                          BackgroundAudioManager()
-                              .playSoundEffect('assets/music/click_sound.mp3');
+                          BackgroundAudioManager().playButtonClickSound();
                           if (sfxVolumeLevel > 0) sfxVolumeLevel--;
                           BackgroundAudioManager().setSoundEffectVolume(
                               sfxVolumeLevel / maxVolumeLevel);
@@ -223,8 +222,7 @@ class _GameSettingsDialogState extends State<GameSettingsDialog> {
                       onIncrease: () {
                         setState(() {
                           // เล่นเสียงเอฟเฟกต์เพื่อให้ผู้ใช้ได้ยินการเปลี่ยนแปลง
-                          BackgroundAudioManager()
-                              .playSoundEffect('assets/music/click_sound.mp3');
+                          BackgroundAudioManager().playButtonClickSound();
                           if (sfxVolumeLevel < maxVolumeLevel) sfxVolumeLevel++;
                           BackgroundAudioManager().setSoundEffectVolume(
                               sfxVolumeLevel / maxVolumeLevel);
